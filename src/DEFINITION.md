@@ -1,21 +1,25 @@
 # File format definition
 
 ## General
-* the file format is simply json
-* data is stored in a toplayer object array
-* each object represents a protein
-* sublevels comprise ID and quant data as well as melting and other meta data, also on peptide level
+* read only
+* each top layer object represents a protein or a peptide
 
 ## Global structure
-1. byte definition of contents table  
-   this section has a fixed size, e.g. 100 bytes
-2. contents table  
-   defines the byte coordinates of each protein object (== index)
-3. the object (proteins) array
+The whole thing should be a valid JSON string.
+
+1. **__** object, which defines the **__index** position.
+2. **__index**, which defines the underlying object positions
+   for queries.
+3. the actual objects
 
 ## File reading strategy
-1. read byte definition for contents table
-2. read contents table, store in memory
-3. in case of requested protein access:
-   1. Look up byte coordinates of protein object
-   2. Read in object and pass it back or feed it in callback function
+1. Read **__** object, which defines a string.
+   This string separated two numbers with the @ sign.
+   The first number defines the start of the **__index** object,
+   the second one is the length, respectively.
+2. Read the **__index** object, which defines the byte positions of
+   the toplayer and underlying objects. This index is going to be stored
+   in memory.
+3. In case of requested protein/peptide access:
+   1. Look up byte coordinates of protein/peptide object
+   2. Read in object.

@@ -1,0 +1,86 @@
+{
+  "__": "20@70",
+  "__index": {
+    "proteins": {
+      "proteinA": [40, 20],
+      "proteinB": [70, 20]
+    },
+    "peptides": {
+      "peptideA": [140, 20],
+      "peptideB": [180, 20]
+    }
+  },
+  "__definitions": {
+    "samples": ["sample1", "sample2"]
+  },
+  "proteins": {
+    "proteinA": {
+      "meta": {
+        "name": "BLK",
+        "description": "kinase",
+        "score": 0
+      },
+      "quant": {
+        "raw.d": [0, 1]
+      },
+      "melting": {
+        "fitted.d": [1, 1],
+        "Tm": 50,
+        "significant": true
+      },
+      "children": {
+        "peptides": ["peptideA"]
+      }
+    },
+    "proteinB": {
+      "meta": {
+        "name": "FYN",
+        "description": "kinase",
+        "score": 0.4
+      },
+      "quant": {
+        "raw.d": [0, 1]
+      },
+      "melting": {
+        "fitted.d": [1, 1],
+        "Tm": 53,
+        "significant": true
+      },
+      "children": {
+        "peptides": ["peptideA", "peptideB"]
+      }
+    }
+  },
+  "peptides": {
+    "peptideA": {
+      "meta": {
+        "sequence": "ARTGHIITR",
+        "score": 0
+      },
+      "quant": {
+        "raw": [0, 1]
+      },
+      "melting": {
+        "fitted": [1, 1],
+        "Tm": 48,
+        "significant": false
+      },
+      "children": {}
+    },
+    "peptideB": {
+      "meta": {
+        "sequence": "HKLRTSITR",
+        "score": 0.3
+      },
+      "quant": {
+        "raw": [1, 1]
+      },
+      "melting": {
+        "fitted": [2, 1],
+        "Tm": 72,
+        "significant": false
+      },
+      "children": {}
+    }
+  }
+}
