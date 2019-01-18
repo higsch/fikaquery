@@ -19,13 +19,15 @@ export default {
   data() {
     return {
       file: null,
+      fq: null,
     };
   },
+  mounted() {
+    this.fq = fq.init(FileReader);
+  },
   watch: {
-    file(file) {
-      fq.readIndex(file, (index) => {
-        console.log(index);
-      });
+    file() {
+      fq.readIndex(true).then(res => console.log(res));
     },
   },
 };
