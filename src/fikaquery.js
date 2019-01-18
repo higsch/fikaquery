@@ -1,5 +1,5 @@
-const fq = alert => alert('test');
+import readIndex from './readIndex';
 
 export default {
-  fq,
+  readIndex,
 };
