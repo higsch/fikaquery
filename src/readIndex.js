@@ -1,7 +1,6 @@
-export default (FileReader, cond) => new Promise((resolve, reject) => {
-  const fr = new FileReader();
+export default cond => new Promise((resolve, reject) => {
   if (cond) {
-    resolve(fr);
+    resolve('all right');
   } else {
     reject(new Error('Error'));
   }
