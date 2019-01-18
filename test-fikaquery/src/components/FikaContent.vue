@@ -12,12 +12,21 @@
 </template>
 
 <script>
+import fq from '../../../src/fikaquery';
+
 export default {
   name: 'FikaContent',
   data() {
     return {
       file: null,
     };
+  },
+  watch: {
+    file(file) {
+      fq.readIndex(file, (index) => {
+        console.log(index);
+      });
+    },
   },
 };
 </script>

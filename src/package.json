@@ -1,0 +1,16 @@
+{
+  "name": "fikaquery",
+  "version": "0.0.1",
+  "description": "",
+  "main": "fikaquery.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Matthias Stahl",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^5.12.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0"
+  }
+}
