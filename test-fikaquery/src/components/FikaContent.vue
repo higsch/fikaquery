@@ -8,11 +8,18 @@
                    class="file-input">
       </b-form-file>
     </b-form>
+    <div v-if="file">
+      <b-button class="mt-2 mr-2" @click="readByte(1, 16)">Read __</b-button>
+      <b-button class="mt-2 mr-2" @click="readByte(20, 242)">Read __index</b-button>
+    </div>
+    <div>
+      {{ message }}
+    </div>
   </div>
 </template>
 
 <script>
-import fq from '../../../src/fikaquery';
+import fikaquery from '../../../src/fikaquery';
 
 export default {
   name: 'FikaContent',
@@ -20,14 +27,19 @@ export default {
     return {
       file: null,
       fq: null,
+      message: null,
     };
-  },
-  mounted() {
-    this.fq = fq.init(FileReader);
   },
   watch: {
     file() {
-      fq.readIndex(true).then(res => console.log(res));
+      this.fq = fikaquery.init(FileReader, this.file);
+    },
+  },
+  methods: {
+    readByte(byteNum, length) {
+      this.fq.readSlice(byteNum, length).then((res) => {
+        this.message = res.target.result;
+      });
     },
   },
 };

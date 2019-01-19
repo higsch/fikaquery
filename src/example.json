@@ -21,10 +21,10 @@
         "score": 0
       },
       "quant": {
-        "raw.d": [0, 1]
+        "raw.samples": [0, 1]
       },
       "melting": {
-        "fitted.d": [1, 1],
+        "fitted.samples": [1, 1],
         "Tm": 50,
         "significant": true
       },
@@ -39,10 +39,10 @@
         "score": 0.4
       },
       "quant": {
-        "raw.d": [0, 1]
+        "raw.samples": [0, 1]
       },
       "melting": {
-        "fitted.d": [1, 1],
+        "fitted.samples": [1, 1],
         "Tm": 53,
         "significant": true
       },

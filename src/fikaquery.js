@@ -1,10 +1,7 @@
 import FQ from './FQ';
-import readIndex from './readIndex';
 
-// init a new fq object
-const init = fr => (new FQ(fr));
+const init = (FileReader, file) => (new FQ(FileReader, file));
 
 export default {
   init,
-  readIndex,
 };
