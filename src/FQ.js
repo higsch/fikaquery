@@ -1,26 +1,11 @@
+/* eslint-disable no-underscore-dangle */
 import b from './binary_utils';
-
-const headerCoords = {
-  start: 0,
-  end: 100,
-};
+import DbHeader from './DbHeader';
 
 const FQ = class {
   constructor(FileReader, file) {
-    this.setFileReader(FileReader);
-    this.setFile(file);
-  }
-
-  setFileReader(FileReader) {
     this.fr = new FileReader();
-  }
-
-  setFile(file) {
     this.file = file;
-  }
-
-  getFile() {
-    return this.file;
   }
 
   readChunk(byteNum, length) {
@@ -31,16 +16,26 @@ const FQ = class {
     });
   }
 
-  getDbHeader() {
-    if (!this.dbHeader) {
+  get dbHeaderRaw() {
+    if (!this._dbHeaderRaw) {
       return new Promise((resolve) => {
-        this.readChunk(headerCoords.start, headerCoords.start + headerCoords.end).then((res) => {
-          this.dbHeader = b.getHexArray(res.target.result);
-          resolve(this.dbHeader);
+        this.readChunk(DbHeader.start, DbHeader.length).then((res) => {
+          this._dbHeaderRaw = b.getHexArray(res.target.result);
+          resolve(this._dbHeaderRaw);
         });
       });
     }
-    return this.dbHeader;
+    return this._dbHeaderRaw;
+  }
+
+  get dbHeader() {
+    if (!this._dbHeaderRaw) {
+      this.dbHeaderRaw();
+    }
+    if (!this._dbHeader) {
+      this._dbHeader = new DbHeader(this._dbHeaderRaw);
+    }
+    return this._dbHeader;
   }
 };
 

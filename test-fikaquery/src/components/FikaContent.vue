@@ -16,7 +16,8 @@
       <h4>Data</h4>
       <div class="db-header">
         <h5>Database header</h5>
-        <pre>{{ db.header }}</pre>
+        <pre>{{ db.headerRaw }}</pre>
+        Page size: <pre>{{ db.pageSize }}</pre>
       </div>
     </div>
   </div>
@@ -33,7 +34,8 @@ export default {
       fq: null,
       db: {
         loaded: false,
-        header: null,
+        headerRaw: null,
+        pageSize: null,
       },
     };
   },
@@ -42,8 +44,9 @@ export default {
       this.fq = fikaquery.connect(FileReader, this.file);
       if (this.fq) {
         this.db.loaded = true;
-        this.fq.getDbHeader().then((res) => {
-          this.db.header = this.formatBinArray(res);
+        this.fq.dbHeaderRaw.then((res) => {
+          this.db.headerRaw = this.formatBinArray(res);
+          this.db.pageSize = this.fq.dbHeader.pageSize;
         });
       } else {
         this.db.loaded = false;
