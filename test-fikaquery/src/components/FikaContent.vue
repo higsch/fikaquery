@@ -4,16 +4,20 @@
       <b-form-file v-model="file"
                    :state="Boolean(file)"
                    placeholder="Choose a fikaquery file..."
-                   accept=".json, .JSON"
+                   accept=".sql, .sqlite, .sqlite3"
                    class="file-input">
       </b-form-file>
     </b-form>
     <div v-if="file">
-      <b-button class="mt-2 mr-2" @click="readByte(1, 16)">Read __</b-button>
-      <b-button class="mt-2 mr-2" @click="readByte(20, 242)">Read __index</b-button>
+      <!-- <b-button class="mt-2 mr-2" @click="readIndex">Read __</b-button>
+      <b-button class="mt-2 mr-2" @click="readIndex">Read __index</b-button> -->
     </div>
-    <div>
-      {{ message }}
+    <div class="data" v-if="db.loaded">
+      <h4>Data</h4>
+      <div class="db-header">
+        <h5>Database header</h5>
+        <pre>{{ db.header }}</pre>
+      </div>
     </div>
   </div>
 </template>
@@ -27,19 +31,40 @@ export default {
     return {
       file: null,
       fq: null,
-      message: null,
+      db: {
+        loaded: false,
+        header: null,
+      },
     };
   },
   watch: {
     file() {
-      this.fq = fikaquery.init(FileReader, this.file);
+      this.fq = fikaquery.connect(FileReader, this.file);
+      if (this.fq) {
+        this.db.loaded = true;
+        this.fq.getDbHeader().then((res) => {
+          this.db.header = this.formatBinArray(res);
+        });
+      } else {
+        this.db.loaded = false;
+      }
     },
   },
   methods: {
-    readByte(byteNum, length) {
-      this.fq.readSlice(byteNum, length).then((res) => {
-        this.message = res.target.result;
+    formatBinArray(obj) {
+      let arr = Object.values(obj);
+      arr = arr.map((e) => {
+        if (e.toString().length === 1) {
+          return `0${e}`;
+        }
+        return e;
       });
+      const arrs = [];
+      const size = 16;
+      while (arr.length > 0) {
+        arrs.push(arr.splice(0, size).join(' '));
+      }
+      return arrs.join('\n');
     },
   },
 };
@@ -49,5 +74,21 @@ export default {
 .file-input {
   max-width: 500px;
   margin: 20px 0 0 0;
+}
+
+h4 {
+  margin-top: 30px;
+}
+
+.db-header {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 20px;
+  border: 1px solid gray;
+  border-radius: 5px;
+}
+
+h5 {
+  font-size: 1rem;
 }
 </style>

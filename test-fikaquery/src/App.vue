@@ -22,12 +22,16 @@ export default {
 <style>
 @import url('https://fonts.googleapis.com/css?family=Asar|Domine');
 
+html, body {
+  font-size: 15px;
+}
+
 h1 {
   font-family: "Domine", serif;
   font-size: 3rem;
 }
 
-h5 {
+h4, h5 {
   font-family: "Asar", serif;
 }
 
