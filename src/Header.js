@@ -1,3 +1,10 @@
+/*
+*
+* SQLite database header representation
+* Karolinska Institutet, 2019
+*
+*/
+
 /* eslint-disable no-underscore-dangle */
 import b from './binary_utils';
 
@@ -23,17 +30,12 @@ const Header = class {
   }
 
   constructor(byteArray) {
-    this._byteArray = byteArray;
     this._headerString = b.strFromHexArray(byteArray.slice(...pos.headerString));
     this._pageSize = b.intFromHexArray(byteArray.slice(...pos.pageSize));
     this._fileChangeCounter = b.intFromHexArray(byteArray.slice(...pos.fileChangeCounter));
     this._numPages = b.intFromHexArray(byteArray.slice(...pos.numPages));
     const intVersion = b.intFromHexArray(byteArray.slice(...pos.version)).toString();
     this._version = `${intVersion.slice(0, 1)}.${intVersion.slice(1, 4)}.${intVersion.slice(4, 7)}`;
-  }
-
-  get raw() {
-    return this._byteArray;
   }
 
   get headerString() {

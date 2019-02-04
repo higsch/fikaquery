@@ -8,15 +8,19 @@
                    class="file-input">
       </b-form-file>
     </b-form>
+    <div class="custom-content-btn" v-if="db">
+      <b-button @click="loadPage(1)">Load page</b-button>
+    </div>
     <div class="data" v-if="db">
-      <h4>Data</h4>
       <div class="db-header" v-if="db.header">
-        Raw header: <pre>{{ formatBinArray(db.header.raw) }}</pre>
         Header string: <pre>{{ db.header.headerString }}</pre>
         File changes: <pre>{{ db.header.fileChangeCounter }}</pre>
         Number of pages: <pre>{{ db.header.numPages }}</pre>
         Page size: <pre>{{ db.header.pageSize }}</pre>
         Version <pre>{{ db.header.version }}</pre>
+      </div>
+      <div class="custom-content" v-if="customContent">
+        Page: <pre>{{ customContent }}</pre>
       </div>
     </div>
   </div>
@@ -31,6 +35,7 @@ export default {
     return {
       file: null,
       db: null,
+      customContent: null,
     };
   },
   watch: {
@@ -54,6 +59,10 @@ export default {
       }
       return arrs.join('\n');
     },
+    async loadPage(pageNumber) {
+      const customContent = await this.db.loadPage(pageNumber);
+      this.customContent = this.formatBinArray(customContent);
+    },
   },
 };
 </script>
@@ -64,13 +73,19 @@ export default {
   margin: 20px 0 0 0;
 }
 
-h4 {
-  margin-top: 30px;
+.data {
+  display: flex;
+  align-items: flex-start;
 }
 
-.db-header {
+.custom-content-btn {
+  margin: 10px 0;
+}
+
+.db-header, .custom-content {
   display: inline-block;
-  margin-top: 20px;
+  min-width: 400px;
+  margin: 20px 5px;
   padding: 10px 20px;
   border: 1px solid gray;
   border-radius: 5px;
