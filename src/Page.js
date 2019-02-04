@@ -40,8 +40,11 @@ const Page = class {
     return this._header;
   }
 
+  get cells() {
+    return this._cells;
+  }
+
   loadCells() {
-    // determine cell pointer array
     const { numCells, headerSize } = this.header;
     const cellPointerBytes = this._byteArray.slice(headerSize, headerSize + numCells * 2);
     cellPointerBytes.forEach((byte, index, arr) => {
@@ -50,7 +53,6 @@ const Page = class {
       }
     });
 
-    // create cells
     this._cells = this._cellPointerArray.map(
       pointer => (new Cell(pointer - this._offset, this._byteArray, this.header.type)),
     );

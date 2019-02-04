@@ -21,17 +21,19 @@ const strFromHexArray = byteArray => (String.fromCharCode(...intArrayFromHexArra
 
 const readVarInt = (byteArray) => {
   const arr = [];
-  while (arr.length <= byteArray.length) {
+  while (arr.length < byteArray.length) {
     const b = byteArray[arr.length];
     if (arr.length === (9 - 1)) {
-      arr.push(b);
+      arr.push(b.toString(2));
       break;
     } else {
-      arr.push(((`0x${(`0${b}`).slice(-2)}` & 0x7F)).toString(16));
+      const bin = (Number(`0x${b}`) & 0x7F).toString(2);
+      arr.push(`000000${bin}`.slice(-7));
     }
-    if ((b >> 7) === 0) break;
+    if ((Number(`0x${b}`) >> 7) === 0) break;
   }
-  return [intFromHexArray(arr), arr.length];
+  const res = parseInt(arr.join(''), 2);
+  return [res, arr.length];
 };
 
 export default {

@@ -16,10 +16,9 @@ const Cell = class {
   constructor(pointer, byteArray, type) {
     this._pointer = pointer;
     this._cursor = 0;
-    this._type = type;
     this._byteArray = byteArray;
 
-    switch (this._type) {
+    switch (type) {
       case PageHeader.TYPE.INTERIOR_INDEX:
       case PageHeader.TYPE.INTERIOR_TABLE:
         this.getLeftPagePointer();
@@ -64,6 +63,10 @@ const Cell = class {
 
   updatePointer(cursor = this._cursor) {
     this._pointer += cursor;
+  }
+
+  get leftPointer() {
+    return this._leftPagePointer;
   }
 };
 
