@@ -51,9 +51,9 @@ const Page = class {
     });
 
     // create cells
-    this._cells = this._cellPointerArray.map((pointer) => {
-      return new Cell(pointer, this._byteArray);
-    });
+    this._cells = this._cellPointerArray.map(
+      pointer => (new Cell(pointer - this._offset, this._byteArray, this.header.type)),
+    );
   }
 };
 

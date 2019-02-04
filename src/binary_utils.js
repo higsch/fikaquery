@@ -23,15 +23,15 @@ const readVarInt = (byteArray) => {
   const arr = [];
   while (arr.length <= byteArray.length) {
     const b = byteArray[arr.length];
-    if (arr.length === 8) {
+    if (arr.length === (9 - 1)) {
       arr.push(b);
       break;
     } else {
-      arr.push(b & 0x7F);
+      arr.push(((`0x${(`0${b}`).slice(-2)}` & 0x7F)).toString(16));
     }
     if ((b >> 7) === 0) break;
   }
-  return intFromHexArray(arr);
+  return [intFromHexArray(arr), arr.length];
 };
 
 export default {

@@ -53,7 +53,6 @@ const DB = class {
 
   async buildSqliteMaster() {
     const page1 = await this.loadPage(1);
-    console.log(page1);
     return page1;
   }
 };
