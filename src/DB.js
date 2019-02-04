@@ -14,7 +14,7 @@ const DB = class {
   constructor(FileReader, file) {
     this.fr = new FileReader();
     this.file = file;
-    this.pages = {};
+    this._pages = {};
   }
 
   readChunk(byteNum, length) {
@@ -38,13 +38,23 @@ const DB = class {
     if (!this._header) {
       throw new Error('No header!');
     }
+    if (pageNumber in this._pages) {
+      return this._pages[pageNumber];
+    }
     const start = (pageNumber - 1) * this.header.pageSize;
     const pageArray = (await this.readChunk(start, this.header.pageSize)).target.result;
-    this.pages = {
-      [pageNumber]: new Page(pageNumber, b.getHexArrayFromUintArray(pageArray)),
-      ...this.pages,
+    const page = new Page(pageNumber, b.getHexArrayFromUintArray(pageArray));
+    this._pages = {
+      [pageNumber.toString()]: page,
+      ...this._pages,
     };
-    return b.getHexArrayFromUintArray(pageArray);
+    return page;
+  }
+
+  async buildSqliteMaster() {
+    const page1 = await this.loadPage(1);
+    console.log(page1);
+    return page1;
   }
 };
 

@@ -60,7 +60,7 @@ export default {
       return arrs.join('\n');
     },
     async loadPage(pageNumber) {
-      const customContent = await this.db.loadPage(pageNumber);
+      const customContent = (await this.db.loadPage(pageNumber)).raw;
       this.customContent = this.formatBinArray(customContent);
     },
   },

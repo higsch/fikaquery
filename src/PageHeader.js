@@ -39,11 +39,26 @@ const PageHeader = class {
     );
     if (this._type === TYPE.INTERIOR_INDEX || this._type === TYPE.INTERIOR_TABLE) {
       this._rightMostPointer = b.intFromHexArray(byteArray.slice(...pos.rightMostPointer));
+      [, this._size] = pos.rightMostPointer;
+    } else {
+      [, this._size] = pos.numFragmentedFreeBytes;
     }
   }
 
   get type() {
     return this._type;
+  }
+
+  get numCells() {
+    return this._numCells;
+  }
+
+  get headerSize() {
+    return this._size;
+  }
+
+  get startCellContentArea() {
+    return this._startCellContentArea;
   }
 };
 
