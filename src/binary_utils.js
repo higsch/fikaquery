@@ -19,10 +19,26 @@ const intArrayFromHexArray = byteArray => (byteArray.map(e => parseInt(e, 16)));
 
 const strFromHexArray = byteArray => (String.fromCharCode(...intArrayFromHexArray(byteArray)));
 
+const readVarInt = (byteArray) => {
+  const arr = [];
+  while (arr.length <= byteArray.length) {
+    const b = byteArray[arr.length];
+    if (arr.length === 8) {
+      arr.push(b);
+      break;
+    } else {
+      arr.push(b & 0x7F);
+    }
+    if ((b >> 7) === 0) break;
+  }
+  return intFromHexArray(arr);
+};
+
 export default {
   getUintArray,
   getHexArrayFromUintArray,
   intFromHexArray,
   intArrayFromHexArray,
   strFromHexArray,
+  readVarInt,
 };
