@@ -1,5 +1,5 @@
 /* eslint-disable no-bitwise */
-const getHexArray = (arrayCollection) => {
+const getHexArrayFromUintArray = (arrayCollection) => {
   const arr = new Uint8Array(arrayCollection);
   const arrBase = [];
   arr.forEach((e) => {
@@ -13,7 +13,13 @@ const intFromHexArray = (byteArray) => {
   return parseInt(arr2.join(''), 16);
 };
 
+const intArrayFromHexArray = byteArray => (byteArray.map(e => parseInt(e, 16)));
+
+const strFromHexArray = byteArray => (String.fromCharCode(...intArrayFromHexArray(byteArray)));
+
 export default {
-  getHexArray,
+  getHexArrayFromUintArray,
   intFromHexArray,
+  intArrayFromHexArray,
+  strFromHexArray,
 };

@@ -8,16 +8,15 @@
                    class="file-input">
       </b-form-file>
     </b-form>
-    <div v-if="file">
-      <!-- <b-button class="mt-2 mr-2" @click="readIndex">Read __</b-button>
-      <b-button class="mt-2 mr-2" @click="readIndex">Read __index</b-button> -->
-    </div>
-    <div class="data" v-if="db.loaded">
+    <div class="data" v-if="db">
       <h4>Data</h4>
-      <div class="db-header">
-        <h5>Database header</h5>
-        <pre>{{ db.headerRaw }}</pre>
-        Page size: <pre>{{ db.pageSize }}</pre>
+      <div class="db-header" v-if="db.header">
+        Raw header: <pre>{{ formatBinArray(db.header.raw) }}</pre>
+        Header string: <pre>{{ db.header.headerString }}</pre>
+        File changes: <pre>{{ db.header.fileChangeCounter }}</pre>
+        Number of pages: <pre>{{ db.header.numPages }}</pre>
+        Page size: <pre>{{ db.header.pageSize }}</pre>
+        Version <pre>{{ db.header.version }}</pre>
       </div>
     </div>
   </div>
@@ -31,26 +30,12 @@ export default {
   data() {
     return {
       file: null,
-      fq: null,
-      db: {
-        loaded: false,
-        headerRaw: null,
-        pageSize: null,
-      },
+      db: null,
     };
   },
   watch: {
-    file() {
-      this.fq = fikaquery.connect(FileReader, this.file);
-      if (this.fq) {
-        this.db.loaded = true;
-        this.fq.dbHeaderRaw.then((res) => {
-          this.db.headerRaw = this.formatBinArray(res);
-          this.db.pageSize = this.fq.dbHeader.pageSize;
-        });
-      } else {
-        this.db.loaded = false;
-      }
+    async file() {
+      this.db = await fikaquery.connect(FileReader, this.file);
     },
   },
   methods: {
@@ -89,9 +74,5 @@ h4 {
   padding: 10px 20px;
   border: 1px solid gray;
   border-radius: 5px;
-}
-
-h5 {
-  font-size: 1rem;
 }
 </style>
