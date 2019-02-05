@@ -13,7 +13,7 @@ import DB from './DB';
 const connect = async (FileReader, file) => {
   const db = new DB(FileReader, file);
   await db.buildHeader();
-  await db.buildSqliteMaster();
+  await db.loadSqliteMaster();
   return db;
 };
 

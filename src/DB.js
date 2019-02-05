@@ -16,6 +16,7 @@
 import b from './binary_utils';
 import Header from './Header';
 import Page from './Page';
+import SqliteMaster from './SqliteMaster';
 
 const DB = class {
   constructor(FileReader, file) {
@@ -59,15 +60,19 @@ const DB = class {
     return page;
   }
 
-  async buildSqliteMaster() {
+  async loadSqliteMaster() {
     const page1 = await this.loadPage(1);
     const pointers = page1.cells.map(cell => cell.leftPointer);
     pointers.push(page1.header.rightMostPointer);
-    const sqliteMasterPages = Promise.all(pointers.map(async (pointer) => {
+
+    // eslint-disable-next-line arrow-body-style
+    const sqliteMasterPages = await Promise.all(pointers.map(async (pointer) => {
       const page = await this.loadPage(pointer);
       return page;
     }));
-    console.log(await sqliteMasterPages);
+
+    this._sqliteMaster = new SqliteMaster(sqliteMasterPages);
+    console.log(this._sqliteMaster);
   }
 };
 

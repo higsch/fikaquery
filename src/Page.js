@@ -23,9 +23,7 @@ const Page = class {
     this._offset = (this._isRoot) ? Header.length : 0;
     this._byteArray = byteArray.slice(this._offset, byteArray.length);
     this._header = new PageHeader(this._byteArray.slice(...pos.header));
-
     this._cellPointerArray = [];
-    this._cells = [];
     this.loadCells();
   }
 
@@ -54,15 +52,11 @@ const Page = class {
       }
     });
 
-    this._cells = this._cellPointerArray.sort((x, y) => (y - x)).map(
-      (pointer, index, pointers) => (new Cell(
-        this._byteArray.slice(
-          pointer - this._offset,
-          pointers[index === 0 ? this._byteArray.length - 1 : index - 1],
-        ),
-        this.header.type,
-      )),
-    );
+    // eslint-disable-next-line arrow-body-style
+    this._cells = this._cellPointerArray.sort((x, y) => (y - x)).map((pointer, index, pointers) => {
+      // eslint-disable-next-line max-len
+      return new Cell(this._byteArray.slice(pointer - this._offset, pointers[index === 0 ? this._byteArray.length - 1 : index - 1]), this.header.type);
+    });
   }
 };
 
