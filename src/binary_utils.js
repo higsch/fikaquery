@@ -19,6 +19,15 @@ const intArrayFromHexArray = byteArray => (byteArray.map(e => parseInt(e, 16)));
 
 const strFromHexArray = byteArray => (String.fromCharCode(...intArrayFromHexArray(byteArray)));
 
+const floatFromHexArray = (byteArray) => {
+  const buffer = new ArrayBuffer(byteArray.length);
+  const dv = new DataView(buffer);
+  byteArray.forEach((e, index) => {
+    dv.setUint8(index, e);
+  });
+  return dv.getFloat64(0, false);
+};
+
 const readVarInt = (byteArray) => {
   const arr = [];
   while (arr.length < byteArray.length) {
@@ -42,5 +51,6 @@ export default {
   intFromHexArray,
   intArrayFromHexArray,
   strFromHexArray,
+  floatFromHexArray,
   readVarInt,
 };

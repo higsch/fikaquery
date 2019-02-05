@@ -16,7 +16,7 @@ const Cell = class {
   constructor(byteArray, type) {
     this._offset = 0;
     this._byteArray = byteArray;
-    this._cols = [];
+    this._colTypes = [];
 
     switch (type) {
       case PageHeader.TYPE.INTERIOR_INDEX:
@@ -31,6 +31,7 @@ const Cell = class {
           .then(cur => this.getRowId(cur))
           .then(cur => this.getPayloadHeaderLength(cur))
           .then(cur => this.getPayloadHeader(cur))
+          .then(cur => this.getPayload(cur))
           .then(cur => this.updateOffset(cur));
         break;
       default:
@@ -39,6 +40,60 @@ const Cell = class {
 
   updateOffset(cur) {
     this._offset += cur;
+  }
+
+  getPayload(cur) {
+    return new Promise((resolve) => {
+      let runningCur = cur;
+      this._payload = this._colTypes.map((colType) => {
+        let res = null;
+        switch (colType) {
+          case 0: {
+            runningCur += 1;
+            break;
+          }
+          case 1:
+          case 2:
+          case 3:
+          case 4: {
+            res = b.intFromHexArray(this._byteArray.slice(runningCur, runningCur + colType));
+            runningCur += colType;
+            break;
+          }
+          case 5: {
+            res = b.intFromHexArray(this._byteArray.slice(runningCur, runningCur + 6));
+            runningCur += 6;
+            break;
+          }
+          case 6: {
+            res = b.intFromHexArray(this._byteArray.slice(runningCur, runningCur + 8));
+            runningCur += 8;
+            break;
+          }
+          case 7: {
+            res = b.floatFromHexArray(this._byteArray.slice(runningCur, runningCur + 8));
+            runningCur += 8;
+            break;
+          }
+          case 10:
+          case 11: {
+            throw new Error('Internal use columns detected!');
+          }
+          default: {
+            if (colType % 2 === 0) {
+              throw new Error('BLOB reading not supported, yet!');
+            } else {
+              const length = (colType - 13) / 2;
+              res = b.strFromHexArray(this._byteArray.slice(runningCur, runningCur + length));
+              runningCur += length;
+              break;
+            }
+          }
+        }
+        return res;
+      });
+      resolve(runningCur);
+    });
   }
 
   getPayloadHeader(cur) {
@@ -51,7 +106,7 @@ const Cell = class {
         [colType, length] = b.readVarInt(
           this._byteArray.slice(totalCur, totalCur + maxVarInt),
         );
-        this._cols.push(colType);
+        this._colTypes.push(colType);
         totalCur += length;
         i += length;
       }
