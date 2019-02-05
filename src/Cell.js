@@ -10,10 +10,14 @@
 import b from './binary_utils';
 import PageHeader from './PageHeader';
 
+// maximum byte size of a VarInt
 const maxVarInt = 9 + 1;
+
+// length of a page pointer
 const pagePointerLength = 4;
 
 const Cell = class {
+  // build a cell
   constructor(byteArray, type) {
     this._cur = 0;
     this._type = type;
@@ -22,6 +26,8 @@ const Cell = class {
     this.parseCell();
   }
 
+  // parse the cell depending on page type
+  // the cursor is running through the singe function calls
   parseCell() {
     switch (this._type) {
       case PageHeader.TYPE.INTERIOR_INDEX:
@@ -41,6 +47,7 @@ const Cell = class {
     }
   }
 
+  // retrieve the payload based on information from the payload header
   getPayload() {
     this._payload = this._colTypes.map((colType) => {
       let res = null;
@@ -106,7 +113,10 @@ const Cell = class {
     });
   }
 
+  // fetch the VarInts of the payload header
   getPayloadHeader() {
+    // the number of total columns in a cell
+    // is dependent on the payload header length and the length byte
     const numCols = this._payloadHeaderLength - this._payloadHeaderLengthSize;
     for (let i = 0; i < numCols;) {
       let colType = 0;
@@ -121,6 +131,8 @@ const Cell = class {
     return this;
   }
 
+  // retrieve the length of the payload header
+  // this is later used to parse the payload header
   getPayloadHeaderLength() {
     [this._payloadHeaderLength, this._payloadHeaderLengthSize] = b.readVarInt(
       this._byteArray.slice(this._cur, this._cur + maxVarInt),
@@ -129,6 +141,7 @@ const Cell = class {
     return this;
   }
 
+  // the pointer left to the key
   getLeftPagePointer() {
     this._leftPagePointer = b.intFromHexArray(
       this._byteArray.slice(this._cur, this._cur + pagePointerLength),
@@ -137,6 +150,7 @@ const Cell = class {
     return this;
   }
 
+  // the key
   getKey() {
     let length = 0;
     [this._key, length] = b.readVarInt(
@@ -146,6 +160,7 @@ const Cell = class {
     return this;
   }
 
+  // determine the total payload length
   getPayloadLength() {
     let length = 0;
     [this._payloadLength, length] = b.readVarInt(
@@ -155,6 +170,7 @@ const Cell = class {
     return this;
   }
 
+  // fetch the rowid
   getRowId() {
     let length = 0;
     [this._rowId, length] = b.readVarInt(
@@ -164,6 +180,7 @@ const Cell = class {
     return this;
   }
 
+  // make some properties public
   get rowId() {
     return this._rowId;
   }

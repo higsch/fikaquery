@@ -9,6 +9,7 @@
 /* eslint-disable no-underscore-dangle */
 import b from './binary_utils';
 
+// db pages can have different types
 const TYPE = {
   INTERIOR_INDEX: 0x02,
   INTERIOR_TABLE: 0x05,
@@ -16,6 +17,7 @@ const TYPE = {
   LEAF_TABLE: 0x0d,
 };
 
+// the header has fixed info byte positions
 const pos = {
   type: [0, 1],
   firstFreeBlock: [1, 3],
@@ -30,6 +32,7 @@ const PageHeader = class {
     return TYPE;
   }
 
+  // just build the thing
   constructor(byteArray) {
     this._type = b.intFromHexArray(byteArray.slice(...pos.type));
     this._firstFreeBlock = b.intFromHexArray(byteArray.slice(...pos.firstFreeBlock));
