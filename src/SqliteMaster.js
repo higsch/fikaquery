@@ -7,14 +7,15 @@
 */
 
 /* eslint-disable no-underscore-dangle */
+/* eslint-disable class-methods-use-this */
 
-// const COL = {
-//   TYPE: 0,
-//   NAME: 1,
-//   TBL_NAME: 2,
-//   ROOTPAGE: 3,
-//   SQL: 4,
-// };
+const COL = {
+  TYPE: 0,
+  NAME: 1,
+  TBL_NAME: 2,
+  ROOTPAGE: 3,
+  SQL: 4,
+};
 
 const SqliteMaster = class {
   constructor(sqliteMasterPages) {
@@ -26,12 +27,39 @@ const SqliteMaster = class {
 
   parseEntities() {
     const allCells = [];
-    for (let i = 0; i < this._sqliteMasterPages.length; i += 1) {
-      for (let j = 0; j < this._sqliteMasterPages[i].cells.length; j += 1) {
-        allCells.push(this._sqliteMasterPages[i].cells[j].payload);
+    this._sqliteMasterPages.forEach((page) => {
+      page.cells.forEach((cell) => {
+        allCells.push(cell.payload);
+      });
+    });
+
+    allCells.forEach((cell) => {
+      if (cell[COL.TYPE] === 'index') {
+        this._indices = {
+          [cell[COL.TBL_NAME]]: this.makeCellObj(cell),
+          ...this._indices,
+        };
       }
-    }
-    this._allCells = allCells;
+      if (cell[COL.TYPE] === 'table') {
+        this._tables = {
+          [cell[COL.TBL_NAME]]: this.makeCellObj(cell),
+          ...this._tables,
+        };
+      }
+    });
+  }
+
+  makeCellObj(cell) {
+    return {
+      name: cell[COL.NAME],
+      rootPage: cell[COL.ROOTPAGE],
+      sql: cell[COL.SQL],
+      cols: this.parseColsFromSQL(cell[COL.SQL]),
+    };
+  }
+
+  parseColsFromSQL(sql) {
+    return sql;
   }
 };
 

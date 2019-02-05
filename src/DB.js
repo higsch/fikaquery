@@ -72,7 +72,6 @@ const DB = class {
     }));
 
     this._sqliteMaster = new SqliteMaster(sqliteMasterPages);
-    console.log(this._sqliteMaster);
   }
 };
 
