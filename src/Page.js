@@ -53,8 +53,14 @@ const Page = class {
       }
     });
 
-    this._cells = this._cellPointerArray.map(
-      pointer => (new Cell(pointer - this._offset, this._byteArray, this.header.type)),
+    this._cells = this._cellPointerArray.sort((x, y) => (y - x)).map(
+      (pointer, index, pointers) => (new Cell(
+        this._byteArray.slice(
+          pointer - this._offset,
+          pointers[index === 0 ? this._byteArray.length - 1 : index - 1],
+        ),
+        this.header.type,
+      )),
     );
   }
 };
