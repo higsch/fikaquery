@@ -76,15 +76,30 @@ const Cell = class {
             runningCur += 8;
             break;
           }
+          case 8: {
+            res = 0;
+            break;
+          }
+          case 9: {
+            res = 1;
+            break;
+          }
           case 10:
           case 11: {
             throw new Error('Internal use columns detected!');
           }
           default: {
             if (colType % 2 === 0) {
+              const length = (colType - 12) / 2;
+              if (length === 0) {
+                throw new Error('BLOB field with size 0!');
+              }
               throw new Error('BLOB reading not supported, yet!');
             } else {
               const length = (colType - 13) / 2;
+              if (length === 0) {
+                throw new Error('String field with size 0!');
+              }
               res = b.strFromHexArray(this._byteArray.slice(runningCur, runningCur + length));
               runningCur += length;
               break;

@@ -61,6 +61,10 @@ const PageHeader = class {
   get startCellContentArea() {
     return this._startCellContentArea;
   }
+
+  get rightMostPointer() {
+    return this._rightMostPointer;
+  }
 };
 
 export default PageHeader;

@@ -19,16 +19,17 @@ import Page from './Page';
 
 const DB = class {
   constructor(FileReader, file) {
-    this.fr = new FileReader();
+    this.FR = FileReader;
     this.file = file;
     this._pages = {};
   }
 
   readChunk(byteNum, length) {
     return new Promise((resolve, reject) => {
-      this.fr.onload = resolve;
-      this.fr.onerror = reject;
-      this.fr.readAsArrayBuffer(this.file.slice(byteNum, byteNum + length));
+      const fr = new this.FR();
+      fr.onload = resolve;
+      fr.onerror = reject;
+      fr.readAsArrayBuffer(this.file.slice(byteNum, byteNum + length));
     });
   }
 
@@ -60,9 +61,13 @@ const DB = class {
 
   async buildSqliteMaster() {
     const page1 = await this.loadPage(1);
-    const sqliteMasterPage = await this.loadPage(page1.cells[0].leftPointer);
-    console.log(sqliteMasterPage);
-    return sqliteMasterPage;
+    const pointers = page1.cells.map(cell => cell.leftPointer);
+    pointers.push(page1.header.rightMostPointer);
+    const sqliteMasterPages = Promise.all(pointers.map(async (pointer) => {
+      const page = await this.loadPage(pointer);
+      return page;
+    }));
+    console.log(await sqliteMasterPages);
   }
 };
 
