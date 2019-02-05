@@ -47,6 +47,7 @@ const SqliteMaster = class {
         };
       }
     });
+    console.log(this._tables);
   }
 
   makeCellObj(cell) {
@@ -59,7 +60,21 @@ const SqliteMaster = class {
   }
 
   parseColsFromSQL(sql) {
-    return sql;
+    let cols = [];
+    const r = /([\s(][A-Za-z0-9_]+\s[A-Z_\s]+[,)])/g;
+    if (sql) {
+      const match = sql.match(r);
+      if (match) {
+        cols = match.map((e) => {
+          const sub = e.slice(1, -1);
+          return {
+            name: sub.split(' ')[0],
+            type: sub.split(' ')[1],
+          };
+        });
+      }
+    }
+    return cols;
   }
 };
 
