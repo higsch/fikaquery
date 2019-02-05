@@ -4,6 +4,7 @@
 * Entry point for all fikaview tasks
 * Karolinska Institutet, 2019
 *
+* Matthias Stahl
 */
 
 import DB from './DB';

@@ -3,6 +3,7 @@
 * SQLite database page representation
 * Karolinska Institutet, 2019
 *
+* Matthias Stahl
 */
 
 /* eslint-disable no-underscore-dangle */

@@ -1,3 +1,11 @@
+/*
+*
+* Binary utility functions
+* Karolinska Institutet, 2019
+*
+* Matthias Stahl
+*/
+
 /* eslint-disable no-bitwise */
 const getUintArray = arrayCollection => (new Uint8Array(arrayCollection));
 

@@ -3,6 +3,13 @@
 * SQLite database representation
 * Karolinska Institutet, 2019
 *
+* Matthias Stahl
+*/
+
+/*
+*
+* Parser design according to the rules at https://sqlite.org/fileformat2.html
+*
 */
 
 /* eslint-disable no-underscore-dangle */
