@@ -104,6 +104,7 @@ export default {
 
 <style scoped>
 h4 {
+  width: 100%;
   font-size: 1.2rem;
   padding: 0 0 0 10px;
   line-height: 2rem;
@@ -122,7 +123,7 @@ td {
 
 pre {
   margin: 3px 0;
-  line-height: .9rem;
+  line-height: 1rem;
   white-space: pre-wrap;
   word-wrap: break-word;
 }
@@ -151,5 +152,6 @@ pre {
 
 .inside-card {
   padding: 0 10px 5px 10px;
+  overflow: scroll;
 }
 </style>
