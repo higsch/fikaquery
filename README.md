@@ -1,17 +1,19 @@
 # 🔎 fikaQuery
 
-[![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.png?v=102)](https://github.com/ellerbrock/open-source-badge/)
+![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.png?v=102)
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.png?v=102)](https://opensource.org/licenses/mit-license.php)
 
 **Load local SQLite databases into your browser.**
 
 *Note: fikaQuery is still under heavy development, but do not hesitate to open issues!*
 
+
 ## 🧐 What it is
 fikaQuery is a JavaScript adaptor to efficiently load and query
 sqlite databases using the HTML5/JavaScript `FileReader` API.
 This makes it possible to access very large sqlite
 databases within the browser.
+
 
 ## ☎️ How to connect to a SQLite database
 fikaQuery has zero dependencies, you can just include it to your
@@ -52,5 +54,19 @@ watch: {
 The `db` object now holds the database connection and provides
 all the functionalities to query the database.
 
+If you cannot wait for your first query, you can just get all
+the tables and indices of your SQLite database.
+```{JavaScript}
+const tables = db.master.tables;
+const indices = db.master.indices;
+```
+The objects hold an array of `table` or `index` elements. They come
+with properties such as `name`, `tblName`, `cols` and a lot more.
+`tables` and `indices` together represent the `sqlite_master` table
+of your database.
+
 
 ## 🗣 How to query
+
+
+## 👩🏼‍💻 Todo list
