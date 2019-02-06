@@ -23,7 +23,7 @@ const SqliteMaster = class {
   constructor(sqliteMasterPages) {
     this._sqliteMasterPages = sqliteMasterPages;
     this._tables = {};
-    this._indices = {};
+    this._indices = [];
     this.parseEntities();
   }
 
@@ -40,10 +40,7 @@ const SqliteMaster = class {
     // parse the cells and sort them by index or table
     allCells.forEach((cell) => {
       if (cell[COL.TYPE] === 'index') {
-        this._indices = {
-          [cell[COL.NAME]]: this.makeCellObj(cell),
-          ...this._indices,
-        };
+        this._indices.push(this.makeCellObj(cell));
       }
       if (cell[COL.TYPE] === 'table') {
         this._tables = {
@@ -88,9 +85,10 @@ const SqliteMaster = class {
         cols = match.map((e) => {
           const sub = e.slice(1, -1);
           // split it to name and type
+          const subSplit = sub.split(' ');
           return {
-            name: sub.split(' ')[0],
-            type: sub.split(' ')[1] || null,
+            name: (cell[COL.TYPE] === 'table') ? subSplit[0] : sub,
+            type: (cell[COL.TYPE] === 'table') ? subSplit[1] : null,
           };
         });
       }
@@ -104,6 +102,10 @@ const SqliteMaster = class {
 
   get indices() {
     return this._indices;
+  }
+
+  getIndicesForTable(tblName, col) {
+    return this._indices.filter(index => (index.tblName === tblName && index.on[0].name === col));
   }
 };
 

@@ -110,6 +110,7 @@ export default {
       return arrs.join('\n');
     },
     async query(name) {
+      this.answer = null;
       this.answer = (await this.db.query.table(name)).slice(0, 20);
     },
   },

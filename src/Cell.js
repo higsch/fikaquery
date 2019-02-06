@@ -31,11 +31,22 @@ const Cell = class {
   parseCell() {
     switch (this._type) {
       case PageHeader.TYPE.INTERIOR_INDEX:
+        this.getLeftPagePointer()
+          .getPayloadLength()
+          .getPayloadHeaderLength()
+          .getPayloadHeader()
+          .getPayload();
+        break;
       case PageHeader.TYPE.INTERIOR_TABLE:
         this.getLeftPagePointer()
           .getKey();
         break;
       case PageHeader.TYPE.LEAF_INDEX:
+        this.getPayloadLength()
+          .getPayloadHeaderLength()
+          .getPayloadHeader()
+          .getPayload();
+        break;
       case PageHeader.TYPE.LEAF_TABLE:
         this.getPayloadLength()
           .getRowId()

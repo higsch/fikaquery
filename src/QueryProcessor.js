@@ -20,18 +20,35 @@ const QueryProcessor = class {
 
   // table query entry point
   async table(name, options = { limit: 1000 }) {
+    const tableHeader = this._db.master.tables[name];
+    const table = new Table(tableHeader);
     // parse options, basically get the interesting rowids
 
     // look for an appropriate index
     // only, if options are defined
+    if (options) {
+      const indexCol = 'protein_acc';
+      const indexHeader = this._db.master.getIndicesForTable(name, indexCol);
+      console.log(indexHeader[0].rootPage);
+      const index = [].concat(...await this.fetchIndices(indexHeader[0].rootPage));
+      console.log(index);
+    }
 
     // get the requested rows
     // let's make an example for no options, full table
-    const tableHeader = this._db.master.tables[name];
-    const table = new Table(tableHeader);
     // eslint-disable-next-line prefer-spread
-    const pages = [].concat(...await this.fetchPages(table.rootPage, options.limit));
-    return pages;
+    const pages = [].concat(...await this.fetchPages(table.rootPage));
+    console.log(pages);
+    // promise all?
+    return [];
+  }
+
+  async fetchIndices(pageNumber) {
+    const page = await this._db.loadPage(pageNumber);
+    if (page.type === PageHeader.TYPE.INTERIOR_INDEX) {
+      return Promise.all(page.getPointers().map(pointer => this.fetchIndices(pointer)));
+    }
+    return [page];
   }
 
   async fetchPages(pageNumber) {
@@ -39,7 +56,7 @@ const QueryProcessor = class {
     if (page.type === PageHeader.TYPE.INTERIOR_TABLE) {
       return Promise.all(page.getPointers().map(pointer => this.fetchPages(pointer)));
     }
-    return page;
+    return [page];
   }
 
   // output type modifier to get a json instead of Table
