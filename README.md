@@ -78,6 +78,58 @@ of your database.
 
 
 ## 🗣 How to query
+fikaQuery does not support SQL as it would be an overkill for
+a read-only database parser. Instead, it has an object-based query
+processor that you get from the root `db` object.
+
+### Retrieve a table
+Just a few examples (will work in future).
+```{JavaScript}
+// get a full table as JSON
+const proteins = db.query.table('proteins').json;
+
+// get selected rows of a table
+const large_proteins = db.query.table('proteins', {where: 'length > 1000'}).json;
+
+// get the first 100 rows of a table
+const first_proteins = db.query.table('proteins', {limit: 100}).json;
+```
+
+The `table` object is your helper in retrieving table data.
+Together with the table name, you can hand over an options object.
+
+### The options object
+An options example.
+```{JavaScript}
+// a table only containing selected proteins with their name and sequence,
+// sorted by name, descending
+const few_proteins = db.query.table('proteins', {
+  where: {
+    name: ['BTK', 'CLP[XP]']
+  },
+  cols: ['name', 'sequence'],
+  sort: ['name', 'DESC']
+}).json;
+```
+
+### Type modifiers
+As you have seen in the previous examples, you can determine the output
+type. For instance, by appending `.json` to your query, you get a handy
+JSON, which you can feed in D3 applications.
+
+If you omit the modifier, you get a `table` object, which is used by
+fikaQuery internally.
+
+You can also add another options object to the modifier to shape your
+output.
+```{JavaScript}
+// get a row-based JSON of the proteins table
+const proteins = db.query.table('proteins').json({
+  base: 'rows'
+});
+```
 
 
-## 👩🏼‍💻 Todo list
+## 👩🏼‍💻 Limitations and todo list
+* [ ] cell overflow support
+* [ ] mirror relations between tables, JOIN functionality
