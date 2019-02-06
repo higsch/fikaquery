@@ -3,12 +3,22 @@
     <b-form>
       <b-form-file v-model="file"
                    :state="Boolean(file)"
-                   placeholder="Choose a fikaquery file..."
-                   accept=".sql, .sqlite, .sqlite3"
+                   placeholder="Choose a SQLite database file..."
+                   accept=".sql, .sqlite, .sqlite3, .sql3"
                    class="file-input">
       </b-form-file>
+      <b-button class="query-btn"
+                @click="query('genes')">
+        SELECT * FROM genes
+      </b-button>
     </b-form>
     <div class="data" v-if="db">
+      <div class="answer" v-if="answer">
+        <h4>Query response</h4>
+        <div class="inside-card">
+          <pre>{{ answer }}</pre>
+        </div>
+      </div>
       <div class="db-header" v-if="db.header">
         <h4>Database header</h4>
         <div class="inside-card">
@@ -73,6 +83,7 @@ export default {
       db: null,
       masterTables: null,
       masterIndices: null,
+      answer: null,
     };
   },
   watch: {
@@ -97,6 +108,9 @@ export default {
         arrs.push(arr.splice(0, size).join(' '));
       }
       return arrs.join('\n');
+    },
+    async query(name) {
+      this.answer = (await this.db.query.table(name)).slice(0, 20);
     },
   },
 };
@@ -140,11 +154,14 @@ pre {
   flex-wrap: wrap;
 }
 
-.custom-content-btn {
-  margin: 10px 0;
+.query-btn {
+  margin: 5px 0 0 10px;
+  color: black;
+  background-color: navajowhite;
+  border: none;
 }
 
-.db-header, .master-tables, .master-indices {
+.answer, .db-header, .master-tables, .master-indices {
   min-width: 200px;
   margin: 10px 10px 0 0;
   border: 1px solid gray;

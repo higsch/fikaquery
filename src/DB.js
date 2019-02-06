@@ -62,20 +62,10 @@ const DB = class {
     if (!this._header) {
       throw new Error('No header!');
     }
-    // if the page has already been loaded, deliver it on the fly
-    // this might be too slow for many pages in the object
-    // deprecate if it slows down the loading process
-    if (pageNumber in this._pages) {
-      return this._pages[pageNumber];
-    }
     const start = (pageNumber - 1) * this.header.pageSize;
     const pageArray = (await this.readChunk(start, this.header.pageSize)).target.result;
     // build a new page
     const page = new Page(pageNumber, b.getHexArrayFromUintArray(pageArray));
-    this._pages = {
-      [pageNumber.toString()]: page,
-      ...this._pages,
-    };
     return page;
   }
 
@@ -96,8 +86,8 @@ const DB = class {
   }
 
   // entry point for queries
-  query(options) {
-    return new QueryProcessor(this, options);
+  get query() {
+    return new QueryProcessor(this);
   }
 };
 

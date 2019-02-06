@@ -45,6 +45,9 @@ const Cell = class {
         break;
       default:
     }
+
+    // kick out raw data, when done
+    delete this._byteArray;
   }
 
   // retrieve the payload based on information from the payload header

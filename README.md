@@ -86,17 +86,17 @@ processor that you get from the root `db` object.
 Just a few examples (will work in future).
 ```{JavaScript}
 // get a full table as JSON
-const proteins = db.query.table('proteins').json;
+const proteins = db.query.table('proteins').json();
 
 // get selected rows of a table
 const millenium_proteins = db.query.table('proteins', {
   where: {
     length: 1000
   }
-}).json;
+}).json();
 
 // get the first 100 rows of a table
-const first_proteins = db.query.table('proteins', {limit: 100}).json;
+const first_proteins = db.query.table('proteins', {limit: 100}).json();
 ```
 
 The `table` object is your helper in retrieving table data.
@@ -113,13 +113,13 @@ const few_proteins = db.query.table('proteins', {
   },
   cols: ['name', 'sequence'],
   sort: ['name', 'DESC']
-}).json;
+}).json();
 ```
 
 ### Type modifiers
 As you have seen in the previous examples, you can determine the output
-type. For instance, by appending `.json` to your query, you get a handy
-JSON, which you can feed in D3 applications.
+type. For instance, by appending the `.json()` method to your query,
+you get a handy JSON, which you can feed in D3 applications.
 
 If you omit the modifier, you get a `table` object, which is used by
 fikaQuery internally.
@@ -137,3 +137,4 @@ const proteins = db.query.table('proteins').json({
 ## 👩🏼‍💻 Limitations and todo list
 * [ ] cell overflow support
 * [ ] mirror relations between tables, JOIN functionality
+* [ ] parse WITHOUT ROWID tables

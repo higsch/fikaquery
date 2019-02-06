@@ -31,16 +31,16 @@ const Page = class {
     this.loadCells();
   }
 
-  get raw() {
-    return this._byteArray;
-  }
-
   get number() {
     return this._pageNumber;
   }
 
   get header() {
     return this._header;
+  }
+
+  get type() {
+    return this._header.type;
   }
 
   get cells() {
@@ -67,6 +67,15 @@ const Page = class {
       // eslint-disable-next-line max-len
       return new Cell(this._byteArray.slice(pointer - this._offset, pointers[index === 0 ? this._byteArray.length - 1 : index - 1]), this.header.type);
     });
+
+    // kick out raw data when done
+    delete this._byteArray;
+  }
+
+  getPointers() {
+    const pointers = this._cells.map(cell => (cell.leftPointer));
+    pointers.push(this._header.rightMostPointer);
+    return pointers;
   }
 };
 
