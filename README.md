@@ -1,5 +1,8 @@
 # 🔎 fikaQuery
 
+[![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.png?v=102)](https://github.com/ellerbrock/open-source-badge/)
+[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.png?v=102)](https://opensource.org/licenses/mit-license.php)
+
 **Load local SQLite databases into your browser.**
 
 *Note: fikaQuery is still under heavy development, but do not hesitate to open issues!*
