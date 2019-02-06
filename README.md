@@ -16,6 +16,15 @@ databases within the browser.
 
 
 ## ☎️ How to connect to a SQLite database
+Right now there is no official build or release. Please clone
+this repo
+```{bash}
+git clone https://github.com/mtstahl/fikaquery.git
+```
+and take all the files from `src`, including `fikaquery.js`, the
+entry point. To serve your site, you have to use webpack or
+something similar.
+
 fikaQuery has zero dependencies, you can just include it to your
 JavaScript code like so.
 ```{JavaScript}
