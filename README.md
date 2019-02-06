@@ -89,7 +89,11 @@ Just a few examples (will work in future).
 const proteins = db.query.table('proteins').json;
 
 // get selected rows of a table
-const large_proteins = db.query.table('proteins', {where: 'length > 1000'}).json;
+const millenium_proteins = db.query.table('proteins', {
+  where: {
+    length: 1000
+  }
+}).json;
 
 // get the first 100 rows of a table
 const first_proteins = db.query.table('proteins', {limit: 100}).json;
