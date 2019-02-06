@@ -8,14 +8,14 @@
 
 /* eslint-disable no-underscore-dangle */
 const QueryProcessor = class {
-    constructor(db, options) {
-        this._db = db;
-        this._options = options;
-    }
+  constructor(db, options) {
+    this._db = db;
+    this._options = options;
+  }
 
-    table(name, options) {
+  // table(name, options) {
 
-    }
+//   }
 };
 
 export default QueryProcessor;

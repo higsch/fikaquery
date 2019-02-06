@@ -8,25 +8,55 @@
                    class="file-input">
       </b-form-file>
     </b-form>
-    <div class="custom-content-btn" v-if="db">
-      <b-button @click="loadPage(1)">Load page</b-button>
-    </div>
     <div class="data" v-if="db">
       <div class="db-header" v-if="db.header">
-        Header string: <pre>{{ db.header.headerString }}</pre>
-        File changes: <pre>{{ db.header.fileChangeCounter }}</pre>
-        Number of pages: <pre>{{ db.header.numPages }}</pre>
-        Page size: <pre>{{ db.header.pageSize }}</pre>
-        Version <pre>{{ db.header.version }}</pre>
+        <h4>Database header</h4>
+        <div class="inside-card">
+          <h5>Header string</h5><pre>{{ db.header.headerString }}</pre>
+          <h5>File changes</h5><pre>{{ db.header.fileChangeCounter }}</pre>
+          <h5>Number of pages</h5><pre>{{ db.header.numPages }}</pre>
+          <h5>Page size</h5><pre>{{ db.header.pageSize }}</pre>
+          <h5>Version</h5><pre>{{ db.header.version }}</pre>
+        </div>
       </div>
-      <div class="master" v-if="master">
-        Master tables:
-        <li v-for="table in master" :key="table.name">
-          {{ table.tblName }} ({{ table.rootPage }})
-        </li>
+      <div class="master-tables" v-if="masterTables">
+        <h4>Tables</h4>
+        <div class="inside-card">
+          <table>
+            <thead>
+              <tr>
+                <td>Page</td><td>Table</td><td>Columns</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="table in masterTables" :key="table.name">
+                <td><pre>{{ table.rootPage }}</pre></td>
+                <td><pre>{{ table.tblName }}</pre></td>
+                <td><pre>{{ table.cols.map(e => e.name).join(', ') }}</pre></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div class="custom-content" v-if="customContent">
-        Page: <pre>{{ customContent }}</pre>
+      <div class="master-indices" v-if="masterIndices">
+        <h4>Indices</h4>
+        <div class="inside-card">
+          <table>
+            <thead>
+              <tr>
+                <td>Page</td><td>Index</td><td>On table</td><td>On column</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="index in masterIndices" :key="index.name">
+                <td><pre>{{ index.rootPage }}</pre></td>
+                <td><pre>{{ index.name }}</pre></td>
+                <td><pre>{{ index.tblName }}</pre></td>
+                <td><pre>{{ index.on.map(e => e.name).join(', ') }}</pre></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -41,13 +71,15 @@ export default {
     return {
       file: null,
       db: null,
-      customContent: null,
+      masterTables: null,
+      masterIndices: null,
     };
   },
   watch: {
     async file() {
       this.db = await fikaquery.connect(FileReader, this.file);
-      this.master = this.db.master.tables;
+      this.masterTables = this.db.master.tables;
+      this.masterIndices = this.db.master.indices;
     },
   },
   methods: {
@@ -66,15 +98,35 @@ export default {
       }
       return arrs.join('\n');
     },
-    async loadPage(pageNumber) {
-      const customContent = (await this.db.loadPage(pageNumber)).raw;
-      this.customContent = this.formatBinArray(customContent);
-    },
   },
 };
 </script>
 
 <style scoped>
+h4 {
+  font-size: 1.2rem;
+  padding: 0 0 0 10px;
+  line-height: 2rem;
+  border-bottom: 1px solid gray;
+}
+
+thead, h5 {
+  font-size: .9rem;
+  font-weight: bold;
+}
+
+td {
+  padding: 0 10px 0 0;
+  vertical-align: top;
+}
+
+pre {
+  margin: 3px 0;
+  line-height: .9rem;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
 .file-input {
   max-width: 500px;
   margin: 20px 0 0 0;
@@ -83,18 +135,21 @@ export default {
 .data {
   display: flex;
   align-items: flex-start;
+  flex-wrap: wrap;
 }
 
 .custom-content-btn {
   margin: 10px 0;
 }
 
-.db-header, .master, .custom-content {
-  display: inline-block;
-  min-width: 400px;
-  margin: 0 10px 0 0;
-  padding: 10px 20px;
+.db-header, .master-tables, .master-indices {
+  min-width: 200px;
+  margin: 10px 10px 0 0;
   border: 1px solid gray;
   border-radius: 5px;
+}
+
+.inside-card {
+  padding: 0 10px 5px 10px;
 }
 </style>

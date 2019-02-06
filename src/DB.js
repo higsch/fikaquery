@@ -52,6 +52,11 @@ const DB = class {
     return this._header;
   }
 
+  // and also the master, the user wants to know all tables
+  get master() {
+    return this._sqliteMaster;
+  }
+
   // load a db page
   async loadPage(pageNumber) {
     if (!this._header) {
