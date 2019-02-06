@@ -30,24 +30,27 @@ const QueryProcessor = class {
       const indexCol = 'protein_acc';
       const indexHeader = this._db.master.getIndicesForTable(name, indexCol);
       console.log(indexHeader[0].rootPage);
-      const index = [].concat(...await this.fetchIndices(indexHeader[0].rootPage));
+      const index = [].concat(...await this.fetchIndices(indexHeader[0].rootPage, options.limit));
       console.log(index);
     }
 
-    // get the requested rows
-    // let's make an example for no options, full table
-    // eslint-disable-next-line prefer-spread
     const pages = [].concat(...await this.fetchPages(table.rootPage));
     console.log(pages);
     // promise all?
     return [];
   }
 
-  async fetchIndices(pageNumber) {
+  async fetchIndices(pageNumber, limit) {
+    console.log(limit);
     const page = await this._db.loadPage(pageNumber);
+    const newLimit = limit - page.cells.length;
     if (page.type === PageHeader.TYPE.INTERIOR_INDEX) {
-      return Promise.all(page.getPointers().map(pointer => this.fetchIndices(pointer)));
+      // eslint-disable-next-line consistent-return
+      return Promise.all(page.getPointers().map(
+        pointer => this.fetchIndices(pointer, newLimit),
+      ));
     }
+    // eslint-disable-next-line consistent-return
     return [page];
   }
 

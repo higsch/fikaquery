@@ -56,7 +56,7 @@ const Cell = class {
         break;
       default:
     }
-
+    if (this._type === PageHeader.TYPE.INTERIOR_INDEX) console.log(this);
     // kick out raw data, when done
     delete this._byteArray;
   }
