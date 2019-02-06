@@ -83,6 +83,14 @@ const SqliteMaster = class {
     }
     return cols;
   }
+
+  get tables() {
+    return this._tables;
+  }
+
+  get indices() {
+    return this._indices;
+  }
 };
 
 export default SqliteMaster;

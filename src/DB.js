@@ -43,6 +43,10 @@ const DB = class {
     return this._header;
   }
 
+  get master() {
+    return this._sqliteMaster;
+  }
+
   async loadPage(pageNumber) {
     if (!this._header) {
       throw new Error('No header!');

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <b-container>
+    <b-container fluid>
       <h1>fikaquery test</h1>
       <h5>Quick tester for the merge between database and JSON.</h5>
       <fika-content />

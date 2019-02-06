@@ -19,6 +19,12 @@
         Page size: <pre>{{ db.header.pageSize }}</pre>
         Version <pre>{{ db.header.version }}</pre>
       </div>
+      <div class="master" v-if="master">
+        Master tables:
+        <li v-for="table in master" :key="table.name">
+          {{ table.tblName }} ({{ table.rootPage }})
+        </li>
+      </div>
       <div class="custom-content" v-if="customContent">
         Page: <pre>{{ customContent }}</pre>
       </div>
@@ -41,6 +47,7 @@ export default {
   watch: {
     async file() {
       this.db = await fikaquery.connect(FileReader, this.file);
+      this.master = this.db.master.tables;
     },
   },
   methods: {
@@ -82,10 +89,10 @@ export default {
   margin: 10px 0;
 }
 
-.db-header, .custom-content {
+.db-header, .master, .custom-content {
   display: inline-block;
   min-width: 400px;
-  margin: 20px 5px;
+  margin: 0 10px 0 0;
   padding: 10px 20px;
   border: 1px solid gray;
   border-radius: 5px;
