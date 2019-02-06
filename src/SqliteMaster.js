@@ -1,6 +1,6 @@
 /*
 *
-* SQLite database representation
+* SQLite sqlite_master table representation
 * Karolinska Institutet, 2019
 *
 * Matthias Stahl
@@ -9,6 +9,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable class-methods-use-this */
 
+// column types of the sqlite_master table
 const COL = {
   TYPE: 0,
   NAME: 1,
@@ -18,6 +19,7 @@ const COL = {
 };
 
 const SqliteMaster = class {
+  // build it and parse the rows/cells
   constructor(sqliteMasterPages) {
     this._sqliteMasterPages = sqliteMasterPages;
     this._tables = {};
@@ -25,7 +27,9 @@ const SqliteMaster = class {
     this.parseEntities();
   }
 
+  // here you go
   parseEntities() {
+    // collect all cells from pages
     const allCells = [];
     this._sqliteMasterPages.forEach((page) => {
       page.cells.forEach((cell) => {
@@ -33,6 +37,7 @@ const SqliteMaster = class {
       });
     });
 
+    // parse the cells and sort them by index or table
     allCells.forEach((cell) => {
       if (cell[COL.TYPE] === 'index') {
         this._indices = {
@@ -49,6 +54,7 @@ const SqliteMaster = class {
     });
   }
 
+  // make a cell representing object
   makeCellObj(cell) {
     return {
       tblName: cell[COL.TBL_NAME],
@@ -60,20 +66,28 @@ const SqliteMaster = class {
     };
   }
 
+  // parse the sql create strings in order to get the column names
+  // of all tables in the database
   parseColsFromSQL(cell) {
     let cols = [];
+    // is there an sql string present?
+    // some internal indices do not have such a thing
     if (cell[COL.SQL]) {
       let r = '';
       if (cell[COL.TYPE] === 'index') {
+        // if we have an index, parse the coulmn name on which the index goes
         r = /\([A-Za-z_]+\)/g;
       }
       if (cell[COL.TYPE] === 'table') {
+        // if it's a table, just get all the column names
         r = /[\s(][A-Za-z0-9_]+\s[A-Z_\s]+[,)]/g;
       }
       const match = cell[COL.SQL].match(r);
       if (match) {
+        // we have at least one match
         cols = match.map((e) => {
           const sub = e.slice(1, -1);
+          // split it to name and type
           return {
             name: sub.split(' ')[0],
             type: sub.split(' ')[1] || null,

@@ -9,9 +9,11 @@
 /* eslint-disable no-underscore-dangle */
 import b from './binary_utils';
 
+// header dimensions on first db page
 const start = 0;
 const length = 100;
 
+// byte positions
 // [offset, end + 1]
 const pos = {
   headerString: [0, 16],
@@ -30,6 +32,8 @@ const Header = class {
     return length;
   }
 
+  // just parse the hex byte array for all interesting properties
+  // there are more, but they are not important for us
   constructor(byteArray) {
     this._headerString = b.strFromHexArray(byteArray.slice(...pos.headerString));
     this._pageSize = b.intFromHexArray(byteArray.slice(...pos.pageSize));
