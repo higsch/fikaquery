@@ -1,7 +1,10 @@
 <template>
   <div id="app">
     <b-container fluid>
-      <h1>fikaquery test</h1>
+      <div class="header">
+        <h1>fikaquery test</h1>
+        <img class="logo" src="https://lehtiolab.github.io/img/logo_big.png" alt="group logo" />
+      </div>
       <h5>SQLite loader to test the fikaquery parser.</h5>
       <fika-content />
     </b-container>
@@ -36,6 +39,17 @@ h4, h5 {
 }
 
 #app {
-  padding: 20px 0 0 0;
+  padding: 20px 0 20px 0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 4rem;
+}
+
+img.logo {
+  height: 40px;
 }
 </style>
