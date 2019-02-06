@@ -23,14 +23,16 @@ git clone https://github.com/mtstahl/fikaquery.git
 ```
 and take all the files from `src`, including `fikaquery.js`, the
 entry point. To serve your site, you have to use webpack or
-something similar.
+something similar. Or you build your page with our
+[test app](https://github.com/mtstahl/fikaquery/tree/master/test-vue)
+as a base.
 
 fikaQuery has zero dependencies, you can just include it to your
 JavaScript code like so.
 ```{JavaScript}
 import fikaquery from 'path/to/fikaquery';
 ```
-Of course, you need a file input field in your `html`. Have a look
+Of course, you need a file input field in your `html`. Again, have a look
 into our Vue-based [test app](https://github.com/mtstahl/fikaquery/tree/master/test-vue).
 If you have chosen a file, you can create a new fikaquery instance
 in your JavaScript that will represent your SQLite database.
