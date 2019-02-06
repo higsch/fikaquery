@@ -2,7 +2,7 @@
   <div id="app">
     <b-container fluid>
       <div class="header">
-        <h1>fikaquery test</h1>
+        <h1>fikaQuery</h1>
         <img class="logo" src="https://lehtiolab.github.io/img/logo_big.png" alt="group logo" />
       </div>
       <h5>SQLite loader to test the fikaquery parser.</h5>
@@ -31,10 +31,10 @@ html, body {
 
 h1 {
   font-family: "Lobster Two", cursive;
-  font-size: 3rem;
+  font-size: 4rem;
 }
 
-h4, h5 {
+h4 {
   font-family: "Asar", serif;
 }
 
@@ -45,11 +45,12 @@ h4, h5 {
 .header {
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
   width: 100%;
-  height: 4rem;
+  height: 6rem;
 }
 
 img.logo {
-  height: 40px;
+  height: 2.3rem;
 }
 </style>

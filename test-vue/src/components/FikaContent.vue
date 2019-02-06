@@ -112,6 +112,7 @@ h4 {
 }
 
 thead, h5 {
+  margin: 0;
   font-size: .9rem;
   font-weight: bold;
 }
@@ -122,7 +123,7 @@ td {
 }
 
 pre {
-  margin: 3px 0;
+  margin: 2px 0 5px 0;
   line-height: 1rem;
   white-space: pre-wrap;
   word-wrap: break-word;
