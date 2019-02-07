@@ -29,35 +29,27 @@ const QueryProcessor = class {
     if (options) {
       const indexCol = 'protein_acc';
       const indexHeader = this._db.master.getIndicesForTable(name, indexCol);
-      console.log(indexHeader[0].rootPage);
-      const index = [].concat(...await this.fetchIndices(indexHeader[0].rootPage, options.limit));
+      const index = [].concat(...await this.fetchFullIndex(indexHeader[0].rootPage));
       console.log(index);
     }
 
-    const pages = [].concat(...await this.fetchPages(table.rootPage));
+    const pages = [].concat(...await this.fetchFullTable(table.rootPage));
     console.log(pages);
-    // promise all?
-    return [];
+    return pages;
   }
 
-  async fetchIndices(pageNumber, limit) {
-    console.log(limit);
+  async fetchFullIndex(pageNumber) {
     const page = await this._db.loadPage(pageNumber);
-    const newLimit = limit - page.cells.length;
     if (page.type === PageHeader.TYPE.INTERIOR_INDEX) {
-      // eslint-disable-next-line consistent-return
-      return Promise.all(page.getPointers().map(
-        pointer => this.fetchIndices(pointer, newLimit),
-      ));
+      return Promise.all(page.getPointers().map(pointer => this.fetchFullIndex(pointer)));
     }
-    // eslint-disable-next-line consistent-return
     return [page];
   }
 
-  async fetchPages(pageNumber) {
+  async fetchFullTable(pageNumber) {
     const page = await this._db.loadPage(pageNumber);
     if (page.type === PageHeader.TYPE.INTERIOR_TABLE) {
-      return Promise.all(page.getPointers().map(pointer => this.fetchPages(pointer)));
+      return Promise.all(page.getPointers().map(pointer => this.fetchFullTable(pointer)));
     }
     return [page];
   }
