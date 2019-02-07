@@ -74,22 +74,18 @@ const Cell = class {
         case 3:
         case 4: {
           res = b.intFromHexArray(this._byteArray.slice(this._cur, this._cur += colType));
-          // this._cur += colType;
           break;
         }
         case 5: {
           res = b.intFromHexArray(this._byteArray.slice(this._cur, this._cur += 6));
-          // this._cur += 6;
           break;
         }
         case 6: {
           res = b.intFromHexArray(this._byteArray.slice(this._cur, this._cur += 8));
-          // this._cur += 8;
           break;
         }
         case 7: {
           res = b.floatFromHexArray(this._byteArray.slice(this._cur, this._cur += 8));
-          // this._cur += 8;
           break;
         }
         case 8: {
@@ -117,7 +113,6 @@ const Cell = class {
               throw new Error('String field with size 0!');
             }
             res = b.strFromHexArray(this._byteArray.slice(this._cur, this._cur += length));
-            // this._cur += length;
             break;
           }
         }
