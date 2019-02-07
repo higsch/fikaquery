@@ -67,30 +67,29 @@ const Cell = class {
       let res = null;
       switch (colType) {
         case 0: {
-          this._cur += 1;
           break;
         }
         case 1:
         case 2:
         case 3:
         case 4: {
-          res = b.intFromHexArray(this._byteArray.slice(this._cur, this._cur + colType));
-          this._cur += colType;
+          res = b.intFromHexArray(this._byteArray.slice(this._cur, this._cur += colType));
+          // this._cur += colType;
           break;
         }
         case 5: {
-          res = b.intFromHexArray(this._byteArray.slice(this._cur, this._cur + 6));
-          this._cur += 6;
+          res = b.intFromHexArray(this._byteArray.slice(this._cur, this._cur += 6));
+          // this._cur += 6;
           break;
         }
         case 6: {
-          res = b.intFromHexArray(this._byteArray.slice(this._cur, this._cur + 8));
-          this._cur += 8;
+          res = b.intFromHexArray(this._byteArray.slice(this._cur, this._cur += 8));
+          // this._cur += 8;
           break;
         }
         case 7: {
-          res = b.floatFromHexArray(this._byteArray.slice(this._cur, this._cur + 8));
-          this._cur += 8;
+          res = b.floatFromHexArray(this._byteArray.slice(this._cur, this._cur += 8));
+          // this._cur += 8;
           break;
         }
         case 8: {
@@ -117,8 +116,8 @@ const Cell = class {
             if (length === 0) {
               throw new Error('String field with size 0!');
             }
-            res = b.strFromHexArray(this._byteArray.slice(this._cur, this._cur + length));
-            this._cur += length;
+            res = b.strFromHexArray(this._byteArray.slice(this._cur, this._cur += length));
+            // this._cur += length;
             break;
           }
         }
