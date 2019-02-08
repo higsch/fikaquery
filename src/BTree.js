@@ -11,16 +11,20 @@ import PageHeader from './PageHeader';
 
 
 const BTree = class {
-  static async fetchFullIndex(pageNumber) {
-    const page = await this._db.loadPage(pageNumber);
+  constructor(pager) {
+    this._pager = pager;
+  }
+
+  async fetchFullIndex(pageNumber) {
+    const page = await this._pager.loadPage(pageNumber);
     if (page.type === PageHeader.TYPE.INTERIOR_INDEX) {
       return Promise.all(page.getPointers().map(pointer => this.fetchFullIndex(pointer)));
     }
     return page;
   }
 
-  static async fetchFullTable(pageNumber) {
-    const page = await this._db.loadPage(pageNumber);
+  async fetchFullTable(pageNumber) {
+    const page = await this._pager.loadPage(pageNumber);
     if (page.type === PageHeader.TYPE.INTERIOR_TABLE) {
       return Promise.all(page.getPointers().map(pointer => this.fetchFullTable(pointer)));
     }

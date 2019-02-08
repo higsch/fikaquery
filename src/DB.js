@@ -37,7 +37,7 @@ const DB = class {
     // fetch the sqlite_master table with all tables and indices
     this._sqliteMaster = await this._pager.loadSqliteMaster();
     // build a new query processor, beacause we assume queries
-    this._queryProcessor = new QueryProcessor(this._sqliteMaster);
+    this._queryProcessor = new QueryProcessor(this._pager, this._sqliteMaster);
   }
 
   // make the header public

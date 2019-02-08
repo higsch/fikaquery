@@ -13,9 +13,10 @@ import Table from './Table';
 import BTree from './BTree';
 
 const QueryProcessor = class {
-  constructor(master = null) {
-    if (!master) throw new Error('No master tables provided!');
+  constructor(pager, master) {
+    this._pager = pager;
     this._master = master;
+    this._btree = new BTree(pager);
   }
 
   // table query entry point
@@ -29,11 +30,11 @@ const QueryProcessor = class {
     if (options) {
       const indexCol = 'protein_acc';
       const indexHeader = this._master.getIndicesForTable(name, indexCol);
-      const index = [].concat(...await BTree.fetchFullIndex(indexHeader[0].rootPage));
+      const index = [].concat(...await this._btree.fetchFullIndex(indexHeader[0].rootPage));
       console.log(index);
     }
 
-    const pages = [].concat(...await BTree.fetchFullTable(table.rootPage));
+    const pages = [].concat(...await this._btree.fetchFullTable(table.rootPage));
     console.log(pages);
     return pages;
   }
