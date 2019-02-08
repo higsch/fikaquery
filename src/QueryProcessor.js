@@ -10,17 +10,17 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-unused-vars */
 import Table from './Table';
-import PageHeader from './PageHeader';
+import BTree from './BTree';
 
 const QueryProcessor = class {
-  constructor(db = null) {
-    if (!db) throw new Error('No database provided!');
-    this._db = db;
+  constructor(master = null) {
+    if (!master) throw new Error('No master tables provided!');
+    this._master = master;
   }
 
   // table query entry point
   async table(name, options = { limit: 1000 }) {
-    const tableHeader = this._db.master.tables[name];
+    const tableHeader = this._master.tables[name];
     const table = new Table(tableHeader);
     // parse options, basically get the interesting rowids
 
@@ -28,30 +28,14 @@ const QueryProcessor = class {
     // only, if options are defined
     if (options) {
       const indexCol = 'protein_acc';
-      const indexHeader = this._db.master.getIndicesForTable(name, indexCol);
-      const index = [].concat(...await this.fetchFullIndex(indexHeader[0].rootPage));
+      const indexHeader = this._master.getIndicesForTable(name, indexCol);
+      const index = [].concat(...await BTree.fetchFullIndex(indexHeader[0].rootPage));
       console.log(index);
     }
 
-    const pages = [].concat(...await this.fetchFullTable(table.rootPage));
+    const pages = [].concat(...await BTree.fetchFullTable(table.rootPage));
     console.log(pages);
     return pages;
-  }
-
-  async fetchFullIndex(pageNumber) {
-    const page = await this._db.loadPage(pageNumber);
-    if (page.type === PageHeader.TYPE.INTERIOR_INDEX) {
-      return Promise.all(page.getPointers().map(pointer => this.fetchFullIndex(pointer)));
-    }
-    return [page];
-  }
-
-  async fetchFullTable(pageNumber) {
-    const page = await this._db.loadPage(pageNumber);
-    if (page.type === PageHeader.TYPE.INTERIOR_TABLE) {
-      return Promise.all(page.getPointers().map(pointer => this.fetchFullTable(pointer)));
-    }
-    return [page];
   }
 
   // output type modifier to get a json instead of Table
