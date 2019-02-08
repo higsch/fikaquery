@@ -104,8 +104,20 @@ const SqliteMaster = class {
     return this._indices;
   }
 
+  hasIndex(tblName, col) {
+    const indices = this.getIndicesForTable(tblName, col);
+    if (indices.length > 0) {
+      return true;
+    }
+    return false;
+  }
+
   getIndicesForTable(tblName, col) {
     return this._indices.filter(index => (index.tblName === tblName && index.on[0].name === col));
+  }
+
+  getTableRootPage(tblName) {
+    return this._tables[tblName].rootPage;
   }
 };
 
