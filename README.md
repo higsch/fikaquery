@@ -65,6 +65,19 @@ watch: {
   }
 }
 ```
+If you like the previous JavaScript `Promise` syntax, then you can
+also use the callback version.
+```{Vue}
+watch: {
+  file() {
+    fikaquery.connect(FileReader, this.file)
+      .then((db) => {
+        this.db = db;
+      });
+  }
+}
+```
+
 The `db` object now holds the database connection and provides
 all the functionalities to query the database.
 
