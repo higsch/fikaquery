@@ -5,14 +5,17 @@
 
 **Load local SQLite databases into your browser.**
 
-*Note: fikaQuery is still under heavy development, but do not hesitate to open issues!*
+*Note: fikaQuery is still under heavy development (especially*
+*the query engine, which is not working right now),*
+*but do not hesitate to open issues!*
 
 
 ## 🧐 What it is
 fikaQuery is a JavaScript adaptor to efficiently load and query
 sqlite databases using the HTML5/JavaScript `FileReader` API.
 This makes it possible to access very large sqlite
-databases within the browser.
+databases within the browser –– without loading the whole
+file into memory.
 
 
 ## ☎️ How to connect to a SQLite database
@@ -79,7 +82,8 @@ of your database.
 
 ## 🗣 How to query
 fikaQuery does not support SQL as it would be an overkill for
-a read-only database parser. Instead, it has an object-based query
+a read-only database parser and I didn't want to write a full
+query planner/executer. Instead, it has an object-based query
 processor that you get from the root `db` object.
 
 ### Retrieve a table
