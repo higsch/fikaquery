@@ -20,23 +20,12 @@ const QueryProcessor = class {
   }
 
   // table query entry point
-  async table(name, options = { limit: 1000 }) {
-    const tableHeader = this._master.tables[name];
-    const table = new Table(tableHeader);
-    // parse options, basically get the interesting rowids
-
-    // look for an appropriate index
-    // only, if options are defined
-    if (options) {
-      const indexCol = 'protein_acc';
-      const indexHeader = this._master.getIndicesForTable(name, indexCol);
-      const index = [].concat(...await this._btree.fetchFullIndex(indexHeader[0].rootPage));
-      console.log(index);
-    }
-
-    const pages = [].concat(...await this._btree.fetchFullTable(table.rootPage));
-    console.log(pages);
-    return pages;
+  async table(name, options = null) {
+    // general procedure
+    // 1) plan query
+    // 2) execute btree search(es)
+    // 3) parse returning pages
+    // 4) makte table and process table
   }
 
   // output type modifier to get a json instead of Table
