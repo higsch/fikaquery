@@ -30,7 +30,7 @@ html, body {
 }
 
 h1 {
-  font-family: "Lobster Two", cursive;
+  font-family: "Lobster Two", sans-serif;
   font-size: 4rem;
 }
 

@@ -27,14 +27,7 @@ const intArrayFromHexArray = byteArray => (byteArray.map(e => parseInt(e, 16)));
 
 const strFromHexArray = byteArray => (String.fromCharCode(...intArrayFromHexArray(byteArray)));
 
-const floatFromHexArray = (byteArray) => {
-  const buffer = new ArrayBuffer(byteArray.length);
-  const dv = new DataView(buffer);
-  byteArray.forEach((e, index) => {
-    dv.setUint8(index, e);
-  });
-  return dv.getFloat64(0, false);
-};
+const floatFromHexArray = byteArray => (Buffer.from(byteArray.join(''), 'hex').readFloatLE(0));
 
 const readVarInt = (byteArray) => {
   const arr = [];

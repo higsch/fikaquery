@@ -7,28 +7,8 @@
                    accept=".sql, .sqlite, .sqlite3, .sql3"
                    class="file-input">
       </b-form-file>
-      <b-button class="query-btn"
-                @click="query('genes')">
-        SELECT * FROM genes
-      </b-button>
     </b-form>
     <div class="data" v-if="db">
-      <div class="answer" v-if="answer">
-        <h4>Query response</h4>
-        <div class="inside-card">
-          <pre>{{ answer }}</pre>
-        </div>
-      </div>
-      <div class="db-header" v-if="db.header">
-        <h4>Database header</h4>
-        <div class="inside-card">
-          <h5>Header string</h5><pre>{{ db.header.headerString }}</pre>
-          <h5>File changes</h5><pre>{{ db.header.fileChangeCounter }}</pre>
-          <h5>Number of pages</h5><pre>{{ db.header.numPages }}</pre>
-          <h5>Page size</h5><pre>{{ db.header.pageSize }}</pre>
-          <h5>Version</h5><pre>{{ db.header.version }}</pre>
-        </div>
-      </div>
       <div class="master-tables" v-if="masterTables">
         <h4>Tables</h4>
         <div class="inside-card">
@@ -41,11 +21,20 @@
             <tbody>
               <tr v-for="table in masterTables" :key="table.name">
                 <td><pre>{{ table.rootPage }}</pre></td>
-                <td><pre>{{ table.tblName }}</pre></td>
+                <td><b-button class="query-btn"
+                            @click="query(table.tblName)">
+                      {{ table.tblName }}
+                    </b-button></td>
                 <td><pre>{{ table.cols.map(e => e.name).join(', ') }}</pre></td>
               </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+      <div class="answer">
+        <h4>Query response</h4>
+        <div class="inside-card">
+          <pre>{{ answer }}</pre>
         </div>
       </div>
       <div class="master-indices" v-if="masterIndices">
@@ -66,6 +55,16 @@
               </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+      <div class="db-header" v-if="db.header">
+        <h4>Database header</h4>
+        <div class="inside-card">
+          <h5>Header string</h5><pre>{{ db.header.headerString }}</pre>
+          <h5>File changes</h5><pre>{{ db.header.fileChangeCounter }}</pre>
+          <h5>Number of pages</h5><pre>{{ db.header.numPages }}</pre>
+          <h5>Page size</h5><pre>{{ db.header.pageSize }}</pre>
+          <h5>Version</h5><pre>{{ db.header.version }}</pre>
         </div>
       </div>
     </div>
@@ -111,7 +110,7 @@ export default {
     },
     async query(name) {
       this.answer = null;
-      this.answer = (await this.db.query.table(name)).slice(0, 20);
+      this.answer = (await this.db.query.table(name)).toString(20);
     },
   },
 };
@@ -156,9 +155,13 @@ pre {
 }
 
 .query-btn {
-  margin: 5px 0 0 10px;
-  color: black;
-  background-color: navajowhite;
+  width: 100%;
+  height: 2rem;
+  margin: 1px 0;
+  padding: 0 2px;
+  line-height: 1rem;
+  color: white;
+  background-color: purple;
   border: none;
 }
 

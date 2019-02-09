@@ -77,7 +77,7 @@ const SqliteMaster = class {
       }
       if (cell[COL.TYPE] === 'table') {
         // if it's a table, just get all the column names
-        r = /[\s(][A-Za-z0-9_]+\s[A-Z_\s]+[,)]/g;
+        r = /[\s(][A-Za-z0-9_]+[A-Z_\s]+[,)]/g;
       }
       const match = cell[COL.SQL].match(r);
       if (match) {
@@ -88,7 +88,7 @@ const SqliteMaster = class {
           const subSplit = sub.split(' ');
           return {
             name: (cell[COL.TYPE] === 'table') ? subSplit[0] : sub,
-            type: (cell[COL.TYPE] === 'table') ? subSplit[1] : null,
+            type: (cell[COL.TYPE] === 'table') ? subSplit.slice(1).join(' ') : null,
           };
         });
       }
@@ -118,6 +118,10 @@ const SqliteMaster = class {
 
   getTableRootPage(tblName) {
     return this._tables[tblName].rootPage;
+  }
+
+  getTableCols(tblName) {
+    return this._tables[tblName].cols;
   }
 };
 

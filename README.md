@@ -103,7 +103,7 @@ processor that you get from the root `db` object.
 Just a few examples (will work in future).
 ```{JavaScript}
 // get a full table as JSON
-const proteins = db.query.table('proteins').json();
+const proteins = (await db.query.table('proteins').json();
 
 // get selected rows of a table
 // only one where clause supported
@@ -111,10 +111,10 @@ const millenium_proteins = db.query.table('proteins', {
   where: {
     length: 1000
   }
-}).json();
+})).json();
 
 // get the first (arbitrary) 100 rows of a table
-const first_proteins = db.query.table('proteins', {limit: 100}).json();
+const first_proteins = (await db.query.table('proteins', {limit: 100})).json();
 ```
 
 The `table` object is your helper in retrieving table data.
@@ -125,13 +125,13 @@ An options example.
 ```{JavaScript}
 // a table only containing selected proteins with their name and sequence,
 // sorted by name, descending
-const few_proteins = db.query.table('proteins', {
+const few_proteins = (await db.query.table('proteins', {
   where: {
     name: 'CLP[XP]'
   },
   cols: ['name', 'sequence'],
   sort: ['name', 'DESC']
-}).json();
+})).json();
 ```
 
 ### Type modifiers
@@ -146,13 +146,14 @@ You can also add another options object to the modifier to shape your
 output.
 ```{JavaScript}
 // get a row-based JSON of the proteins table
-const proteins = db.query.table('proteins').json({
+const proteins = (await db.query.table('proteins')).json({
   base: 'rows'
 });
 ```
 
 
 ## 👩🏼‍💻 Limitations and todo list
+* [ ] implement query engine
 * [ ] cell overflow support
 * [ ] mirror relations between tables, JOIN functionality
 * [ ] parse WITHOUT ROWID tables

@@ -16,7 +16,11 @@ const BTree = class {
   }
 
   async fetchFullIndex(pageNumber) {
-    return [].concat(...await this.fetchFullIndexRec(pageNumber));
+    const pages = await this.fetchFullIndexRec(pageNumber);
+    if (Array.isArray(pages)) {
+      return [].concat(...pages);
+    }
+    return [pages];
   }
 
   async fetchFullIndexRec(pageNumber) {
@@ -28,7 +32,11 @@ const BTree = class {
   }
 
   async fetchFullTable(pageNumber) {
-    return [].concat(...await this.fetchFullTableRec(pageNumber));
+    const pages = await this.fetchFullTableRec(pageNumber);
+    if (Array.isArray(pages)) {
+      return [].concat(...pages);
+    }
+    return [pages];
   }
 
   async fetchFullTableRec(pageNumber) {
