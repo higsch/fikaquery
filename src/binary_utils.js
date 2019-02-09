@@ -34,7 +34,6 @@ const floatFromHexArray = (byteArray) => {
   intArray.forEach((e, index) => {
     dv.setInt8(index, e);
   });
-  console.log(dv.getFloat64(0, false));
   return dv.getFloat64(0, false);
 };
 
