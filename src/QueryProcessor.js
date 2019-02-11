@@ -15,6 +15,9 @@ import Table from './Table';
 const STRATEGY = {
   NO_STRATEGY: 0,
   TABLE_FULL_SCAN: 1,
+  TABLE_LIMITED_SCAN: 2,
+  INDEX_TABLE_SEARCH: 3,
+  INDEX_INDEX_TABLE_SEARCH: 4,
 };
 
 const QueryProcessor = class {

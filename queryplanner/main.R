@@ -1,3 +1,5 @@
+library(tidyverse)
+library(pheatmap)
 # make a table with all query possibilities
 
 # make the dataframe
@@ -8,7 +10,7 @@ df$index_where <- rep(c(rep(0, 2), rep(1, 2)), 8)
 df$index_sort <- rep(c(0, 1), 16)
 
 # fill in solutions
-df$plan <- c(rep("full_scan", 4),
+df$plan <- as.numeric(factor(c(rep("full_scan", 4),
              rep("limited_scan", 4),
              rep(c("full_scan", "index_table"), 4),
              rep("full_scan", 2),
@@ -20,5 +22,10 @@ df$plan <- c(rep("full_scan", 4),
              "index_WHERE_index_SORT_table",
              rep("full_scan", 2),
              "index_WHERE_table",
-             "index_WHERE_index_SORT_table")
+             "index_WHERE_index_SORT_table")))
+
+df %>%
+  pheatmap(cluster_rows = FALSE,
+           cluster_cols = FALSE)
+  
   
