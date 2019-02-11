@@ -51,7 +51,7 @@
                 <td><pre>{{ index.rootPage }}</pre></td>
                 <td><pre>{{ index.name }}</pre></td>
                 <td><pre>{{ index.tblName }}</pre></td>
-                <td><pre>{{ index.on.map(e => e.name).join(', ') }}</pre></td>
+                <td><pre>{{ index.cols.map(e => e.name).join(', ') }}</pre></td>
               </tr>
             </tbody>
           </table>

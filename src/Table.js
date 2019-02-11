@@ -11,9 +11,8 @@
 const INT_PRIM_KEY = 'INTEGER PRIMARY KEY';
 
 const Table = class {
-  constructor(tblName, rootPage, cols) {
+  constructor(tblName, cols) {
     this._name = tblName;
-    this._rootPage = rootPage;
     this._cols = cols;
     this._intPrimKey = this.colTypes.indexOf(INT_PRIM_KEY);
   }
@@ -23,11 +22,17 @@ const Table = class {
     pages.forEach((page) => {
       page.cells.forEach((cell) => {
         const { payload } = cell;
-        payload[this._intPrimKey] = cell.rowId;
-        rows[cell.rowId] = cell.payload;
+        if (this._intPrimKey !== -1) {
+          payload[this._intPrimKey] = cell.rowId;
+        }
+        rows[cell.rowId || cell.payload[0]] = cell.payload;
       });
     });
     this._rows = rows;
+  }
+
+  filter(col, value) {
+
   }
 
   // make some properties public

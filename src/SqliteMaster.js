@@ -40,13 +40,10 @@ const SqliteMaster = class {
     // parse the cells and sort them by index or table
     allCells.forEach((cell) => {
       if (cell[COL.TYPE] === 'index') {
-        this._indices.push(this.makeCellObj(cell));
+        this._indices[cell[COL.NAME]] = this.makeCellObj(cell);
       }
       if (cell[COL.TYPE] === 'table') {
-        this._tables = {
-          [cell[COL.TBL_NAME]]: this.makeCellObj(cell),
-          ...this._tables,
-        };
+        this._tables[cell[COL.TBL_NAME]] = this.makeCellObj(cell);
       }
     });
   }
@@ -59,7 +56,7 @@ const SqliteMaster = class {
       type: cell[COL.TYPE],
       rootPage: cell[COL.ROOTPAGE],
       sql: cell[COL.SQL],
-      [cell[COL.TYPE] === 'table' ? 'cols' : 'on']: this.parseColsFromSQL(cell),
+      cols: this.parseColsFromSQL(cell),
     };
   }
 
@@ -91,6 +88,12 @@ const SqliteMaster = class {
             type: (cell[COL.TYPE] === 'table') ? subSplit.slice(1).join(' ') : null,
           };
         });
+        if (cell[COL.TYPE] === 'index') {
+          cols.push({
+            name: 'rowId',
+            type: null,
+          });
+        }
       }
     }
     return cols;
@@ -105,15 +108,24 @@ const SqliteMaster = class {
   }
 
   hasIndex(tblName, col) {
-    const indices = this.getIndicesForTable(tblName, col);
-    if (indices.length > 0) {
+    const index = this.getIndexInfo(tblName, col);
+    if (index) {
       return true;
     }
     return false;
   }
 
-  getIndicesForTable(tblName, col) {
-    return this._indices.filter(index => (index.tblName === tblName && index.on[0].name === col));
+  getIndexInfo(tblName, col) {
+    const indices = [];
+    Object.entries(this._indices).forEach(([, index]) => {
+      if (index.tblName === tblName && index.sql && index.cols[0].name === col) {
+        indices.push(index);
+      }
+    });
+    if (indices.length > 0) {
+      return indices[0];
+    }
+    return [];
   }
 
   getTableRootPage(tblName) {
@@ -122,6 +134,10 @@ const SqliteMaster = class {
 
   getTableCols(tblName) {
     return this._tables[tblName].cols;
+  }
+
+  getIndexCols(indexName) {
+    return this._indices[indexName].cols;
   }
 };
 

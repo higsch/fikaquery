@@ -9,58 +9,71 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-unused-vars */
-import BTree from './BTree';
+import BTreeRunner from './BTreeRunner';
 import Table from './Table';
-
-const STRATEGY = {
-  NO_STRATEGY: 0,
-  TABLE_FULL_SCAN: 1,
-  TABLE_LIMITED_SCAN: 2,
-  INDEX_TABLE_SEARCH: 3,
-  INDEX_INDEX_TABLE_SEARCH: 4,
-};
 
 const QueryProcessor = class {
   constructor(pager, master) {
     this._pager = pager;
     this._master = master;
-    this._bTree = new BTree(pager);
+    this._bTree = new BTreeRunner(pager);
   }
 
   // table query entry point
-  async table(tblName, options = { limit: 100 }) {
-    // general procedure
-    // 1) plan query
-    // 2) execute btree search(es)
-    // 3) parse returning pages
-    // 4) makte table and process table
+  async table(tblName, options = { where: { set_id: 1 } }) {
+    const table = await this.execute(tblName, options);
+    return table;
+  }
 
-    // 1) plan the query
-    // const strategy = this.plan(tblName, options);
-
-    // 2) execute it
+  async execute(tblName, options) {
     const tblRootPage = this._master.getTableRootPage(tblName);
-    // const pages = this.execute(STRATEGY.TABLE_FULL_SCAN, tblName, options, tblRootPage);
-    const pages = await this.execute(STRATEGY.TABLE_FULL_SCAN, tblName, options, tblRootPage);
-    // console.log(pages);
+    if (options) {
+      const indices = await this.getIndicesFromOptions(tblName, options);
+      console.log(indices);
+    }
+    const fullTablePages = await this._bTree.fetchTree(tblRootPage);
+    const table = this.makeTable(tblName, fullTablePages);
+    return table;
+  }
 
-    // 3) + 4) parse pages, make table
-    const table = new Table(tblName, tblRootPage, this._master.getTableCols(tblName));
+  makeTable(tblName, pages) {
+    const table = new Table(tblName, this._master.getTableCols(tblName));
     table.addRows(pages);
     return table;
   }
 
-  plan(tblName, options) {
-
+  makeIndex(indexName, pages) {
+    const index = new Table(indexName, this._master.getIndexCols(indexName));
+    index.addRows(pages);
+    return index;
   }
 
-  execute(strategy, tblName, options, tableRootPage) {
-    switch (strategy) {
-      case STRATEGY.TABLE_FULL_SCAN:
-        return this._bTree.fetchFullTable(tableRootPage);
-      default:
-        return [];
+  async getIndicesFromOptions(tblName, options) {
+    const indices = {
+      where: null,
+      sort: null,
+    };
+    if (options) {
+      if (options.where) {
+        const indexCol = Object.keys(options.where)[0];
+        if (this._master.hasIndex(tblName, indexCol)) {
+          const indexInfo = this._master.getIndexInfo(tblName, indexCol);
+          const indexPages = await this._bTree.fetchTree(indexInfo.rootPage);
+          const index = this.makeIndex(indexInfo.name, indexPages);
+          indices.where = index;
+        }
+      }
+      if (options.sort) {
+        const indexCol = options.sort[0];
+        if (this._master.hasIndex(tblName, indexCol)) {
+          const indexInfo = this._master.getIndexInfo(tblName, indexCol);
+          const indexPages = await this._bTree.fetchTree(indexInfo.rootPage);
+          const index = this.makeIndex(indexInfo.name, indexPages);
+          indices.sort = index;
+        }
+      }
     }
+    return indices;
   }
 };
 
