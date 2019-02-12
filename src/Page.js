@@ -73,8 +73,8 @@ const Page = class {
   }
 
   getPointers() {
-    const pointers = this._cells.map(cell => (cell.leftPointer));
-    pointers.push(this._header.rightMostPointer);
+    const pointers = this._cells.map(cell => ([cell.key || cell.rowId, cell.leftPointer]));
+    pointers.push([null, this._header.rightMostPointer]);
     return pointers;
   }
 };

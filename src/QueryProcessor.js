@@ -28,8 +28,12 @@ const QueryProcessor = class {
   async execute(tblName, options) {
     const tblRootPage = this._master.getTableRootPage(tblName);
     if (options) {
-      const indices = await this.getIndicesFromOptions(tblName, options);
-      console.log(indices);
+      const indexWhereCol = Object.keys(options.where)[0] || null;
+      const indexSortCol = (options.sort) ? options.sort[0] : null;
+      const indices = {
+        where: await this.getIndexFromOptions(tblName, indexWhereCol),
+        sort: await this.getIndexFromOptions(tblName, indexSortCol),
+      };
     }
     const fullTablePages = await this._bTree.fetchTree(tblRootPage);
     const table = this.makeTable(tblName, fullTablePages);
@@ -48,32 +52,15 @@ const QueryProcessor = class {
     return index;
   }
 
-  async getIndicesFromOptions(tblName, options) {
-    const indices = {
-      where: null,
-      sort: null,
-    };
-    if (options) {
-      if (options.where) {
-        const indexCol = Object.keys(options.where)[0];
-        if (this._master.hasIndex(tblName, indexCol)) {
-          const indexInfo = this._master.getIndexInfo(tblName, indexCol);
-          const indexPages = await this._bTree.fetchTree(indexInfo.rootPage);
-          const index = this.makeIndex(indexInfo.name, indexPages);
-          indices.where = index;
-        }
-      }
-      if (options.sort) {
-        const indexCol = options.sort[0];
-        if (this._master.hasIndex(tblName, indexCol)) {
-          const indexInfo = this._master.getIndexInfo(tblName, indexCol);
-          const indexPages = await this._bTree.fetchTree(indexInfo.rootPage);
-          const index = this.makeIndex(indexInfo.name, indexPages);
-          indices.sort = index;
-        }
-      }
+  async getIndexFromOptions(tblName, indexCol, until = null, limit = null) {
+    if (!indexCol) return null;
+    if (this._master.hasIndex(tblName, indexCol)) {
+      const indexInfo = this._master.getIndexInfo(tblName, indexCol);
+      const indexPages = await this._bTree.fetchTree(indexInfo.rootPage, until, limit);
+      const index = this.makeIndex(indexInfo.name, indexPages);
+      return index;
     }
-    return indices;
+    return null;
   }
 };
 

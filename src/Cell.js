@@ -193,6 +193,10 @@ const Cell = class {
     return this._rowId;
   }
 
+  get key() {
+    return this._key;
+  }
+
   get leftPointer() {
     return this._leftPagePointer;
   }

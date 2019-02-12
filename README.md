@@ -97,24 +97,15 @@ of your database.
 fikaQuery does not support SQL as it would be an overkill for
 a read-only database parser and I didn't want to write a full
 query planner/executer. Instead, it has an object-based query
-processor that you get from the root `db` object.
+processor that you get from the root `db` object. And, wow, it
+does only support one `where` clause and the selection of some
+`cols`.
 
 ### Retrieve a table
 Just a few examples (will work in future).
 ```{JavaScript}
 // get a full table as JSON
-const proteins = (await db.query.table('proteins').json();
-
-// get selected rows of a table
-// only one where clause supported
-const millenium_proteins = db.query.table('proteins', {
-  where: {
-    length: 1000
-  }
-})).json();
-
-// get the first (arbitrary) 100 rows of a table
-const first_proteins = (await db.query.table('proteins', {limit: 100})).json();
+const proteins = (await db.query.table('proteins')).json();
 ```
 
 The `table` object is your helper in retrieving table data.
@@ -123,14 +114,20 @@ Together with the table name, you can hand over an options object.
 ### The options object
 An options example.
 ```{JavaScript}
-// a table only containing selected proteins with their name and sequence,
-// sorted by name, descending
-const few_proteins = (await db.query.table('proteins', {
+// get selected rows of a table
+// only one where clause supported...
+const millenium_proteins = db.query.table('proteins', {
   where: {
-    name: 'CLP[XP]'
+    length: 1000
+  }
+})).json();
+
+// a table only containing selected proteins with their name and sequence,
+const positive_proteins = (await db.query.table('proteins', {
+  where: {
+    name: 'YES1'
   },
-  cols: ['name', 'sequence'],
-  sort: ['name', 'DESC']
+  cols: ['name', 'sequence']
 })).json();
 ```
 
@@ -141,19 +138,18 @@ you get a handy JSON, which you can feed in D3 applications.
 
 If you omit the modifier, you get a `table` object, which is used by
 fikaQuery internally.
-
-You can also add another options object to the modifier to shape your
-output.
 ```{JavaScript}
 // get a row-based JSON of the proteins table
-const proteins = (await db.query.table('proteins')).json({
-  base: 'rows'
-});
+const proteins = (await db.query.table('proteins')).json();
+
+// get a simple string representation of the proteins table
+const proteins = (await db.query.table('proteins')).toString();
 ```
 
 
 ## 👩🏼‍💻 Limitations and todo list
 * [ ] implement query engine
+* [ ] implement more query options
 * [ ] cell overflow support
 * [ ] mirror relations between tables, JOIN functionality
 * [ ] parse WITHOUT ROWID tables

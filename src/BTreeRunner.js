@@ -15,11 +15,8 @@ const BTree = class {
     this._pager = pager;
   }
 
-  async fetchTree(pageNumber, until = null, limit = null) {
-    let pages = null;
-    if (!limit && !until) {
-      pages = await this.fetchFullTreeRec(pageNumber);
-    }
+  async fetchTree(pageNumber) {
+    const pages = await this.fetchFullTreeRec(pageNumber);
     if (Array.isArray(pages)) {
       return [].concat(...pages);
     }
