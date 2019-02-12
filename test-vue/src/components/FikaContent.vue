@@ -110,7 +110,7 @@ export default {
     },
     async query(name) {
       this.answer = null;
-      this.answer = (await this.db.query.table(name)).toString(20);
+      this.answer = (await this.db.query.table(name)).toString(100);
     },
   },
 };
@@ -150,8 +150,8 @@ pre {
 
 .data {
   display: flex;
+  flex-direction: row;
   align-items: flex-start;
-  flex-wrap: wrap;
 }
 
 .query-btn {
@@ -173,6 +173,7 @@ pre {
 }
 
 .inside-card {
+  max-height: 74vh;
   padding: 0 10px 5px 10px;
   overflow: scroll;
 }

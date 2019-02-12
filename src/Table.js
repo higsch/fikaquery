@@ -31,10 +31,6 @@ const Table = class {
     this._rows = rows;
   }
 
-  filter(col, value) {
-
-  }
-
   // make some properties public
   get name() {
     return this._name;

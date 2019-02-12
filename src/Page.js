@@ -62,6 +62,7 @@ const Page = class {
     });
     // run through the sorted pointers, take us to the cell bytes
     // and build new cell objects
+    // Todo: chek sort when implementing binary search
     // eslint-disable-next-line arrow-body-style
     this._cells = this._cellPointerArray.sort((x, y) => (y - x)).map((pointer, index, pointers) => {
       // eslint-disable-next-line max-len

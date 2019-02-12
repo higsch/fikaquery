@@ -20,7 +20,7 @@ const QueryProcessor = class {
   }
 
   // table query entry point
-  async table(tblName, options = { where: { set_id: 1 } }) {
+  async table(tblName, options = null) {
     const table = await this.execute(tblName, options);
     return table;
   }
@@ -40,6 +40,7 @@ const QueryProcessor = class {
     return table;
   }
 
+  // Todo: fuse indices and tables in sqliteMaster
   makeTable(tblName, pages) {
     const table = new Table(tblName, this._master.getTableCols(tblName));
     table.addRows(pages);

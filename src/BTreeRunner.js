@@ -26,7 +26,7 @@ const BTree = class {
   async fetchFullTreeRec(pageNumber) {
     const page = await this._pager.loadPage(pageNumber);
     if (page.type === PageHeader.TYPE.INTERIOR_TABLE) {
-      return Promise.all(page.getPointers().map(pointer => this.fetchFullTreeRec(pointer)));
+      return Promise.all(page.getPointers().map(([, pointer]) => this.fetchFullTreeRec(pointer)));
     }
     return page;
   }

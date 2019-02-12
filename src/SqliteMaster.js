@@ -23,7 +23,7 @@ const SqliteMaster = class {
   constructor(sqliteMasterPages) {
     this._sqliteMasterPages = sqliteMasterPages;
     this._tables = {};
-    this._indices = [];
+    this._indices = {};
     this.parseEntities();
   }
 
